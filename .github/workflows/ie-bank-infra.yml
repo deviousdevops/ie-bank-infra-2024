@@ -9,7 +9,7 @@ on:
 env:
   RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-PROFESSORS
   SUBSCRIPTION_ID_DEV: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
-  USER_ALIAS: aguadamillas
+  USER_ALIAS: zalsaheb
 
 jobs:
   build:
