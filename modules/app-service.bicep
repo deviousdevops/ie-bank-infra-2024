@@ -16,7 +16,7 @@ param appServiceAPIDBHostFLASK_DEBUG string
 ])
 param environmentType string
 
-var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B2'
+var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
 
 resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   name: appServicePlanName
