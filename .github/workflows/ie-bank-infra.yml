@@ -36,7 +36,7 @@ jobs:
           path: ./main.bicep  # Adjust this path as necessary for your build output
 
   deploy-dev:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     needs: build
     environment:
@@ -68,7 +68,7 @@ jobs:
         deploymentName: ${{ env.USER_ALIAS }}-dev
 
   deploy-uat:
-    if: github.event_name == 'push'
+    if: github.event.pull_request.base.ref == 'main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     needs: build
     environment:
