@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-param workbookName string = 'bestbank-workbook-uat'
+param workbookName string = 'zaidgroup-workbook-uat'
 param logAnalyticsWorkspaceId string
 param appInsightsId string
 
