@@ -1,27 +1,72 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-      "environmentType": {
-          "value": "nonprod"
-      },
-      "postgreSQLServerName": {
-          "value": "zalsaheb-dbsrv-uat"
-      },
-      "postgreSQLDatabaseName": {
-          "value": "zalsaheb-db-uat"
-      },
-      "appServicePlanName": {
-          "value": "zalsahebs-asp-uat"
-      },
-      "appServiceAPIAppName": {
-          "value": "zalsaheb-be-uat"
-      },
-      "appServiceAppName": {
-          "value": "zalsaheb-fe-uat"
-      },
-      "location": {
-          "value": "North Europe"
-      }
-  }
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environmentType": {
+            "value": "nonprod"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "postgreSQLServerName": {
+            "value": "devious-dbsrv-uat"
+        },
+        "postgreSQLDatabaseName": {
+            "value": "devious-db-uat"
+        },
+        "appServicePlanName": {
+            "value": "devious-asp-uat"
+        },
+        "appServiceAppName": {
+            "value": "devious-fe-uat"
+        },
+        "appServiceAPIAppName": {
+            "value": "devious-be-uat"
+        },
+        "appServiceAPIEnvVarENV": {
+            "value": "uat"
+        },
+        "appServiceAPIEnvVarDBHOST": {
+            "value": "devious-dbsrv-uat.postgres.database.azure.com"
+        },
+        "appServiceAPIEnvVarDBNAME": {
+            "value": "devious-db-uat"
+        },
+        "appServiceAPIEnvVarDBPASS": {
+            "value": "<secure-password>"
+        },
+        "appServiceAPIDBHostDBUSER": {
+            "value": "iebankdbadmin"
+        },
+        "appServiceAPIDBHostFLASK_APP": {
+            "value": "app:app"
+        },
+        "appServiceAPIDBHostFLASK_DEBUG": {
+            "value": "1"
+        },
+        "vnetName": {
+            "value": "devious-vnet-uat"
+        },
+        "keyVaultName": {
+            "value": "devious-kv-uat"
+        },
+        "tenantId": {
+            "value": "<your-tenant-id>"
+        },
+        "storageAccountName": {
+            "value": "deviousstoruat"
+        },
+        "containerRegistryName": {
+            "value": "deviousacruat"
+        },
+        "applicationInsightsName": {
+            "value": "devious-ai-uat"
+        },
+        "logAnalyticsWorkspaceName": {
+            "value": "devious-law-uat"
+        },
+        "staticWebAppName": {
+            "value": "devious-swa-uat"
+        }
+    }
 }
