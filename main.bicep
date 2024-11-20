@@ -4,6 +4,8 @@
   'prod'
 ])
 param environmentType string = 'nonprod'
+@sys.description('The user alias to add to the deployment name')
+param userAlias string = 'aguadamillas'
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
@@ -96,7 +98,7 @@ resource postgresSQLDatabase 'Microsoft.DBforPostgreSQL/flexibleServers/database
 }
 
 module appService 'modules/app-service.bicep' = {
-  name: 'appService'
+  name: 'appService-${userAlias}'
   params: {
     location: location
     environmentType: environmentType
