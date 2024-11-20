@@ -11,17 +11,41 @@
         "postgreSQLDatabaseName": {
             "value": "devious-db-dev"
         },
+        "adminUser": {
+            "value": "devadmin"
+        },
+        "staticWebAppName": {
+            "value": "devious-swa-dev"
+        },
         "appServicePlanName": {
             "value": "devious-asp-dev"
         },
         "appServiceAPIAppName": {
             "value": "devious-be-dev"
         },
-        "appServiceAppName": {
-            "value": "devious-fe-dev"
+        "vnetName": {
+            "value": "devious-vnet-dev"
+        },
+        "keyVaultName": {
+            "value": "devious-kv-dev"
+        },
+        "storageAccountName": {
+            "value": "deviousstordev"
+        },
+        "applicationInsightsName": {
+            "value": "devious-ai-dev"
+        },
+        "logAnalyticsWorkspaceName": {
+            "value": "devious-law-dev"
+        },
+        "containerRegistryName": {
+            "value": "deviousacrdev"
         },
         "location": {
             "value": "North Europe"
+        },
+        "tenantId": {
+            "value": "<your-tenant-id>"
         }
     }
 }
