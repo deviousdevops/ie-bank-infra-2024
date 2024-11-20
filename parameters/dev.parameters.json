@@ -6,19 +6,19 @@
             "value": "nonprod"
         },
         "postgreSQLServerName": {
-            "value": "zalsaheb-dbsrv-dev"
+            "value": "devious-dbsrv-dev"
         },
         "postgreSQLDatabaseName": {
-            "value": "zalsaheb-db-dev"
+            "value": "devious-db-dev"
         },
         "appServicePlanName": {
-            "value": "zalsahebs-asp-dev"
+            "value": "devious-asp-dev"
         },
         "appServiceAPIAppName": {
-            "value": "zalsaheb-be-dev"
+            "value": "devious-be-dev"
         },
         "appServiceAppName": {
-            "value": "zalsaheb-fe-dev"
+            "value": "devious-fe-dev"
         },
         "location": {
             "value": "North Europe"
