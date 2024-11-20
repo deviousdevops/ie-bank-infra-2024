@@ -5,6 +5,9 @@
         "environmentType": {
             "value": "nonprod"
         },
+        "location": {
+            "value": "North Europe"
+        },
         "postgreSQLServerName": {
             "value": "devious-dbsrv-dev"
         },
@@ -19,9 +22,6 @@
         },
         "appServiceAPIAppName": {
             "value": "devious-be-dev"
-        },
-        "location": {
-            "value": "North Europe"
         },
         "appServiceAPIEnvVarENV": {
             "value": "development"
@@ -43,6 +43,30 @@
         },
         "appServiceAPIDBHostFLASK_DEBUG": {
             "value": "1"
+        },
+        "vnetName": {
+            "value": "devious-vnet-dev"
+        },
+        "keyVaultName": {
+            "value": "devious-kv-dev"
+        },
+        "tenantId": {
+            "value": "<your-tenant-id>"
+        },
+        "storageAccountName": {
+            "value": "deviousstordev"
+        },
+        "containerRegistryName": {
+            "value": "deviousacrdev"
+        },
+        "applicationInsightsName": {
+            "value": "devious-ai-dev"
+        },
+        "logAnalyticsWorkspaceName": {
+            "value": "devious-law-dev"
+        },
+        "staticWebAppName": {
+            "value": "devious-swa-dev"
         }
     }
 }

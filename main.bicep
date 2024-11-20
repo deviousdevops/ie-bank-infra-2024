@@ -42,6 +42,16 @@ param appServiceAPIDBHostFLASK_APP string
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
 
+// Add new parameters needed for other resources
+param vnetName string
+param keyVaultName string
+param tenantId string
+param storageAccountName string
+param containerRegistryName string
+param applicationInsightsName string
+param logAnalyticsWorkspaceName string
+param staticWebAppName string
+
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   name: postgreSQLServerName
   location: location
@@ -107,3 +117,81 @@ module appService 'modules/app-service.bicep' = {
 }
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
+
+// Add other modules
+module vnet 'modules/vnet.bicep' = {
+  name: 'vnet'
+  params: {
+    location: location
+    name: vnetName
+  }
+}
+
+module keyVault 'modules/key-vault.bicep' = {
+  name: 'keyVault'
+  params: {
+    location: location
+    name: keyVaultName
+    tenantId: tenantId
+  }
+}
+
+module storage 'modules/blob-storage.bicep' = {
+  name: 'storage'
+  params: {
+    location: location
+    storageAccountName: storageAccountName
+    environmentType: environmentType
+  }
+}
+
+module containerRegistry 'modules/docker-registry.bicep' = {
+  name: 'containerRegistry'
+  params: {
+    location: location
+    name: containerRegistryName
+    environmentType: environmentType
+  }
+}
+
+module appInsights 'modules/app-insights.bicep' = {
+  name: 'appInsights'
+  params: {
+    location: location
+    name: applicationInsightsName
+    environmentType: environmentType
+  }
+}
+
+module logAnalytics 'modules/log-analytics.bicep' = {
+  name: 'logAnalytics'
+  params: {
+    location: location
+    name: logAnalyticsWorkspaceName
+    environmentType: environmentType
+  }
+}
+
+module staticWebApp 'modules/static-web-frontend.bicep' = {
+  name: 'staticWebApp'
+  params: {
+    location: location
+    name: staticWebAppName
+    environmentType: environmentType
+  }
+}
+
+// Add private endpoint after PostgreSQL and VNet are deployed
+module privateEndpoint 'modules/private-endpoint.bicep' = {
+  name: 'privateEndpoint'
+  params: {
+    location: location
+    name: '${postgreSQLServerName}-pe'
+    postgresServerId: postgresSQLServer.id
+    vnetName: vnetName
+    subnetName: 'DatabaseSubnet'
+  }
+  dependsOn: [
+    vnet
+  ]
+}
