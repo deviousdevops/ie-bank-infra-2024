@@ -121,40 +121,6 @@ module appService 'modules/app-service.bicep' = {
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
 // Add other modules
-module vnet 'modules/vnet.bicep' = {
-  name: 'vnet'
-  params: {
-    location: location
-    name: vnetName
-  }
-}
-
-module keyVault 'modules/key-vault.bicep' = {
-  name: 'keyVault'
-  params: {
-    location: location
-    name: keyVaultName
-    tenantId: tenantId
-  }
-}
-
-module storage 'modules/blob-storage.bicep' = {
-  name: 'storage'
-  params: {
-    location: location
-    storageAccountName: storageAccountName
-    environmentType: environmentType
-  }
-}
-
-module containerRegistry 'modules/docker-registry.bicep' = {
-  name: 'containerRegistry'
-  params: {
-    location: location
-    name: containerRegistryName
-    environmentType: environmentType
-  }
-}
 
 module appInsights 'modules/app-insights.bicep' = {
   name: 'appInsights'
@@ -173,12 +139,38 @@ module logAnalytics 'modules/log-analytics.bicep' = {
     environmentType: environmentType
   }
 }
-
-module staticWebApp 'modules/static-web-frontend.bicep' = {
-  name: 'staticWebApp'
+module vnet 'modules/vnet.bicep' = {
+  name: 'vnet'
   params: {
     location: location
-    name: staticWebAppName
+    name: vnetName
+  }
+}
+
+module keyVault 'modules/key-vault.bicep' = {
+  name: 'keyVault'
+  params: {
+    location: location
+    name: keyVaultName
+    tenantId: tenantId
+    secrets: []
+  }
+}
+
+module storage 'modules/blob-storage.bicep' = {
+  name: 'storage'
+  params: {
+    location: location
+    storageAccountName: storageAccountName
+    environmentType: environmentType
+  }
+}
+
+module containerRegistry 'modules/docker-registry.bicep' = {
+  name: 'containerRegistry'
+  params: {
+    location: location
+    name: containerRegistryName
     environmentType: environmentType
   }
 }

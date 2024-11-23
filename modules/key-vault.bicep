@@ -1,6 +1,8 @@
 param location string
 param name string
 param tenantId string
+@description('Array of secrets to be added to the Key Vault')
+param secrets array
 
 resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
   name: name
@@ -14,4 +16,10 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
     accessPolicies: []
   }
 }
+resource keyVaultSecrets 'Microsoft.KeyVault/vaults/secrets@2021-10-01' = [for secret in secrets: {
+  name: '${keyVault.name}/${secret.name}'
+  properties: {
+    value: secret.value
+  }
+}]
 

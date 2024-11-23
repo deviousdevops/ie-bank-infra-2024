@@ -12,9 +12,10 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-pr
     name: sku
   }
   properties: {
-    adminUserEnabled: false
+    adminUserEnabled: true
   }
 }
 
 output containerRegistryLoginServer string = containerRegistry.properties.loginServer
+output containerRegistryUserName string = containerRegistry.listCredentials().username
 
