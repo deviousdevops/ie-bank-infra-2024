@@ -17,5 +17,4 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-pr
 }
 
 output containerRegistryLoginServer string = containerRegistry.properties.loginServer
-output containerRegistryUserName string = containerRegistry.listCredentials().username
 
