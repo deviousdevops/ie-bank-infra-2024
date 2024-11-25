@@ -47,8 +47,8 @@ param appServiceAPIDBHostFLASK_DEBUG string
 // Add new parameters needed for other resources
 param vnetName string
 param keyVaultName string
-param tenantId string
-param storageAccountName string
+// Update this parameter
+param tenantId string = subscription().tenantId  // This will automatically get your tenant IDparam storageAccountName string
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
@@ -121,6 +121,7 @@ module appService 'modules/app-service.bicep' = {
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
 // Add other modules
+/*
 module vnet 'modules/vnet.bicep' = {
   name: 'vnet'
   params: {
@@ -128,7 +129,7 @@ module vnet 'modules/vnet.bicep' = {
     name: vnetName
   }
 }
-
+*/
 module keyVault 'modules/key-vault.bicep' = {
   name: 'keyVault'
   params: {
@@ -184,6 +185,7 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
 }
 
 // Add private endpoint after PostgreSQL and VNet are deployed
+/*
 module privateEndpoint 'modules/private-endpoint.bicep' = {
   name: 'privateEndpoint'
   params: {
@@ -197,3 +199,4 @@ module privateEndpoint 'modules/private-endpoint.bicep' = {
     vnet
   ]
 }
+*/
