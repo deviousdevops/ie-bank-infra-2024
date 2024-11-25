@@ -52,7 +52,7 @@ param storageAccountName string
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
-param staticWebAppName string
+
 
 resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   name: postgreSQLServerName

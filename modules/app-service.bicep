@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
-param appServicePlanName string
+param appServicePlanName string = 'devious-asp-uat'
 param appServiceAppName string
-param appServiceAPIAppName string
+param appServiceAPIAppName string = 'devious-be-uat'
 param appServiceAPIEnvVarENV string
 param appServiceAPIEnvVarDBHOST string
 param appServiceAPIEnvVarDBNAME string
@@ -23,6 +23,7 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   location: location
   sku: {
     name: appServicePlanSkuName
+    tier : 'Basic'
   }
   kind: 'linux'
   properties: {
