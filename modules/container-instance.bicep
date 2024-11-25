@@ -25,3 +25,4 @@ resource containerInstance 'Microsoft.ContainerInstance/containerGroups@2021-07-
     osType: 'Linux'
   }
 }
+
