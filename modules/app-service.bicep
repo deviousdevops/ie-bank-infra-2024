@@ -16,8 +16,32 @@ param appServiceAPIDBHostFLASK_DEBUG string
 ])
 param environmentType string
 
-var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
+// Parameters for Docker support
+@allowed([
+  'python'
+  'node'
+  'docker'
+])
+param deploymentType string = 'python' // Default to 'python'
+param dockerRegistryName string = ''
+@secure()
+param dockerRegistryServerUserName string = ''
+@secure()
+param dockerRegistryServerPassword string = ''
+param dockerRegistryImageName string = ''
+param dockerRegistryImageVersion string = 'latest'
+param appCommandLine string = ''
 
+var appServicePlanSkuName = (environmentType == 'prod') ? 'P1v2' : 'B1'
+
+// Define Docker-specific app settings
+var dockerAppSettings = [
+  { name: 'DOCKER_REGISTRY_SERVER_URL', value: 'https://${dockerRegistryName}.azurecr.io' }
+  { name: 'DOCKER_REGISTRY_SERVER_USERNAME', value: dockerRegistryServerUserName }
+  { name: 'DOCKER_REGISTRY_SERVER_PASSWORD', value: dockerRegistryServerPassword }
+]
+
+// App Service Plan
 resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   name: appServicePlanName
   location: location
@@ -30,15 +54,16 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   }
 }
 
-resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
+// Python or Node.js App Service
+resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = if (deploymentType != 'docker') {
   name: appServiceAPIAppName
   location: location
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'PYTHON|3.11'
-      alwaysOn: false
+      linuxFxVersion: (deploymentType == 'python') ? 'PYTHON|3.11' : 'NODE|18-lts'
+      alwaysOn: (deploymentType == 'python')
       ftpsState: 'FtpsOnly'
       appSettings: [
         {
@@ -78,20 +103,22 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
+// Docker App Service
+resource appServiceDockerApp 'Microsoft.Web/sites@2022-03-01' = if (deploymentType == 'docker') {
   name: appServiceAppName
   location: location
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'NODE|18-lts'
+      linuxFxVersion: 'DOCKER|${dockerRegistryName}.azurecr.io/${dockerRegistryImageName}:${dockerRegistryImageVersion}'
       alwaysOn: false
       ftpsState: 'FtpsOnly'
-      appCommandLine: 'pm2 serve /home/site/wwwroot --spa --no-daemon'
-      appSettings: []
+      appCommandLine: appCommandLine
+      appSettings: union(dockerAppSettings, [])
     }
   }
 }
 
-output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+output appServiceApiHostName string = (deploymentType == 'docker') ? appServiceDockerApp.properties.defaultHostName : appServiceAPIApp.properties.defaultHostName
+
