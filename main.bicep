@@ -45,10 +45,10 @@ param appServiceAPIDBHostFLASK_APP string
 param appServiceAPIDBHostFLASK_DEBUG string
 
 // Add new parameters needed for other resources
-param vnetName string
+//param vnetName string
 param keyVaultName string
 // Update this parameter
-param tenantId string = subscription().tenantId  // This will automatically get your tenant IDparam storageAccountName string
+//param tenantId string = subscription().tenantId  // This will automatically get your tenant IDparam storageAccountName string
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
@@ -183,6 +183,22 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
     environmentType: environmentType
   }
 }
+
+
+module postgresql 'modules/postgresql-db.bicep' = {
+  name: 'postgresql-deployment'
+  params: {
+    location: location
+    serverName: postgresServerName
+    databaseName: postgresDatabaseName
+    adminUser: adminUser
+    adminPassword: adminPassword
+    environmentType: environmentType
+  }
+}
+
+// Change this line
+output storageAccountName string = storage.outputs.storageAccountName  // Use the module output instead of direct name
 
 // Add private endpoint after PostgreSQL and VNet are deployed
 /*
