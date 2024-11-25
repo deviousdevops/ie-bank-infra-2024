@@ -9,12 +9,12 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-pr
   name: name
   location: location
   sku: {
-    name: sku
+    name: 'Standard'
   }
   properties: {
-    adminUserEnabled: false
+    adminUserEnabled: true
   }
 }
 
-output containerRegistryLoginServer string = containerRegistry.properties.loginServer
+output registryLoginServer string = containerRegistry.properties.loginServer
 
