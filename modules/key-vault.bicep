@@ -15,12 +15,19 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
     accessPolicies: []
   }
 }
-
+resource adminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  parent: keyVault    // Use parent property
+  name: 'adminPassword'
+  properties: {
+    value: adminPassword
+  }
+}
+/*
 resource adminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-10-01' = {
   name: '${keyVault.name}/admin-password'
   properties: {
     value: adminPassword
   }
 }
-
+*/
 output keyVaultUri string = keyVault.properties.vaultUri
