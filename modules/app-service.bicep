@@ -96,5 +96,49 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
+resource appServiceDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'AppServiceDiagnostics'
+  scope: appServiceApp
+  properties: {
+    workspaceId: workspaceResourceId // Log Analytics Workspace ID
+    logs: [
+      {
+        category: 'AppServiceHTTPLogs' // Captures HTTP logs
+        enabled: true
+      }
+      {
+        category: 'AppServiceConsoleLogs' // Captures console logs
+        enabled: true
+      }
+      {
+        category: 'AppServiceAppLogs' // Captures application logs
+        enabled: true
+      }
+      {
+        category: 'AppServiceAuditLogs' // Captures audit logs
+        enabled: true
+      }
+      {
+        category: 'AppServiceIPSecAuditLogs' // Captures IPSec audit logs
+        enabled: true
+      }
+      {
+        category: 'AppServicePlatformLogs' // Captures platform logs
+        enabled: true
+      }
+      {
+        category: 'AppServiceAuthenticationLogs' // Captures authentication logs
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics' // Tracks all metrics for the app service
+        enabled: false
+      }
+    ]
+  }
+}
+
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 
