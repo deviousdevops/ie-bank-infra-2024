@@ -85,6 +85,7 @@ module keyVault 'modules/key-vault.bicep' = {
     name: keyVaultName
     adminPassword: appServiceAPIEnvVarDBPASS
     registryName: containerRegistry.name
+    objectId: subscription().subscriptionId
   }
   dependsOn: [
     containerRegistry
