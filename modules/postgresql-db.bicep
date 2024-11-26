@@ -99,10 +99,10 @@ resource postgreSQLDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01
 }
 
 resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
-  name: 'Query-Performance-Alert'
+  name: 'Failed-Connections-Alert'
   location: 'global'
   properties: {
-    description: 'Alert when query duration exceeds 500ms'
+    description: 'Alert when there are failed connections'
     severity: 2
     enabled: true
     scopes: [
@@ -114,11 +114,11 @@ resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
       'odata.type': 'Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria'
       allOf: [
         {
-          name: 'QueryDuration'
+          name: 'Connections-Failed'
           criterionType: 'StaticThresholdCriterion'
-          metricName: 'active_queries_duration_ms'
+          metricName: 'connections_failed'
           operator: 'GreaterThan'
-          threshold: 500
+          threshold: 1
           timeAggregation: 'Average'
         }
       ]
