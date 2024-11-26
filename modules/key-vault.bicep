@@ -4,6 +4,7 @@ param name string
 param adminPassword string
 param registryName string
 param objectId string
+param githubActionsPrincipalId string
 param workspaceResourceId string
 
 // Reference an existing container registry
@@ -17,6 +18,9 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
   name: name
   location: location
   properties: {
+    enabledForDeployment: true
+    enabledForTemplateDeployment: true
+    enabledForDiskEncryption: true
     tenantId: subscription().tenantId
     sku: {
       family: 'A'
@@ -27,12 +31,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
         tenantId: subscription().tenantId
         objectId: objectId
         permissions: {
-          keys: [
-            'get'
-            'list'
-            'create'
-            'delete'
-          ]
           secrets: [
             'get'
             'list'
@@ -45,13 +43,16 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
             'create'
             'delete'
           ]
+          keys: [
+            'get'
+            'list'
+            'create'
+            'delete'
+          ]
         }
       }
     ]
-    enabledForDeployment: true
-    enabledForTemplateDeployment: true
-    enabledForDiskEncryption: true
-    enableRbacAuthorization: false
+    enableRbacAuthorization: true
   }
 }
 
@@ -62,9 +63,6 @@ resource adminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-previ
   properties: {
     value: adminPassword
   }
-  dependsOn: [
-    keyVault
-  ]
 }
 
 // Store the registry admin password in Key Vault
@@ -72,12 +70,8 @@ resource registryPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-pr
   parent: keyVault
   name: 'registry-password'
   properties: {
-    value: containerRegistry.listCredentials().passwords[0].value
+    value: containerRegistry.listCredentials().passwords[0].value // Fetches the registry password dynamically
   }
-  dependsOn: [
-    containerRegistry
-    keyVault
-  ]
 }
 
 // Store the registry admin username in Key Vault
@@ -85,16 +79,22 @@ resource registryUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-pr
   parent: keyVault
   name: 'registry-username'
   properties: {
-    value: containerRegistry.name
+    value: containerRegistry.name // Stores the registry name as username
   }
-  dependsOn: [
-    containerRegistry
-    keyVault
-  ]
 }
 
-// Add Diagnostic Settings to send logs to Log Analytics
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+// Add role assignment for GitHub Actions
+resource keyVaultSecretsUserRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(keyVault.id, githubActionsPrincipalId, 'Key Vault Secrets User')
+  scope: keyVault
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6') // Key Vault Secrets User role
+    principalId: githubActionsPrincipalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource keyVaultDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: '${keyVault.name}-diagnostic'
   scope: keyVault
   properties: {
@@ -103,27 +103,19 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
       {
         category: 'AuditEvent'
         enabled: true
-        retentionPolicy: {
-          days: 0
-          enabled: false
-        }
       }
     ]
     metrics: [
       {
         category: 'AllMetrics'
         enabled: true
-        retentionPolicy: {
-          days: 0
-          enabled: false
-        }
       }
     ]
   }
-  dependsOn: [
-    keyVault
-  ]
 }
+
+// Output only the Key Vault URI (non-sensitive information)
+output keyVaultUri string = keyVault.properties.vaultUri
 
 // Output only the Key Vault URI (non-sensitive information)
 output keyVaultUri string = keyVault.properties.vaultUri
