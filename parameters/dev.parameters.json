@@ -41,9 +41,6 @@
         "appServiceAPIDBHostFLASK_DEBUG": {
             "value": "1"
         },
-        "vnetName": {
-            "value": "devious-vnet-dev"
-        },
         "keyVaultName": {
             "value": "devious-kv-dev"
         },
