@@ -81,6 +81,26 @@ resource registryUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-pr
   }
 }
 
+resource keyVaultDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'KeyVaultDiagnostic'
+  scope: keyVault
+  properties: {
+    workspaceId: workspaceResourceId
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+    logs: [
+      {
+        category: 'AuditEvent'
+        enabled: true
+      }
+    ]
+  }
+}
+
 // Output only the Key Vault URI (non-sensitive information)
 output keyVaultUri string = keyVault.properties.vaultUri
 
