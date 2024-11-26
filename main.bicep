@@ -47,55 +47,12 @@ param appServiceAPIDBHostFLASK_DEBUG string
 // Add new parameters needed for other resources
 param vnetName string
 param keyVaultName string
-param tenantId string
 param storageAccountName string
+param tenantId string = subscription().tenantId
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
 param staticWebAppName string
-
-resource postgresSQLServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
-  name: postgreSQLServerName
-  location: location
-  sku: {
-    name: 'Standard_B1ms'
-    tier: 'Burstable'
-  }
-  properties: {
-    administratorLogin: 'iebankdbadmin'
-    administratorLoginPassword: 'IE.Bank.DB.Admin.Pa$$'
-    createMode: 'Default'
-    highAvailability: {
-      mode: 'Disabled'
-      standbyAvailabilityZone: ''
-    }
-    storage: {
-      storageSizeGB: 32
-    }
-    backup: {
-      backupRetentionDays: 7
-      geoRedundantBackup: 'Disabled'
-    }
-    version: '15'
-  }
-
-  resource postgresSQLServerFirewallRules 'firewallRules@2022-12-01' = {
-    name: 'AllowAllAzureServicesAndResourcesWithinAzureIps'
-    properties: {
-      endIpAddress: '0.0.0.0'
-      startIpAddress: '0.0.0.0'
-    }
-  }
-}
-
-resource postgresSQLDatabase 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2022-12-01' = {
-  name: postgreSQLDatabaseName
-  parent: postgresSQLServer
-  properties: {
-    charset: 'UTF8'
-    collation: 'en_US.UTF8'
-  }
-}
 
 module appService 'modules/app-service.bicep' = {
   name: 'appService-${userAlias}'
@@ -114,13 +71,16 @@ module appService 'modules/app-service.bicep' = {
     appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
   }
   dependsOn: [
-    postgresSQLDatabase
+    postgresql
+    keyVault
+    storage
   ]
 }
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
 // Add other modules
+/* 
 module vnet 'modules/vnet.bicep' = {
   name: 'vnet'
   params: {
@@ -128,13 +88,16 @@ module vnet 'modules/vnet.bicep' = {
     name: vnetName
   }
 }
+*/
 
 module keyVault 'modules/key-vault.bicep' = {
   name: 'keyVault'
   params: {
     location: location
     name: keyVaultName
-    tenantId: tenantId
+    adminPassword: appServiceAPIEnvVarDBPASS
+    tenantId: tenantId    // Add this line
+
   }
 }
 
@@ -152,6 +115,7 @@ module containerRegistry 'modules/docker-registry.bicep' = {
   params: {
     location: location
     name: containerRegistryName
+    sku: 'Standard'
     environmentType: environmentType
   }
 }
@@ -182,8 +146,8 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
     environmentType: environmentType
   }
 }
-
 // Add private endpoint after PostgreSQL and VNet are deployed
+/* 
 module privateEndpoint 'modules/private-endpoint.bicep' = {
   name: 'privateEndpoint'
   params: {
@@ -197,3 +161,38 @@ module privateEndpoint 'modules/private-endpoint.bicep' = {
     vnet
   ]
 }
+*/
+
+module postgresql 'modules/postgresql-db.bicep' = {
+  name: 'postgresql-deployment'
+  params: {
+    location: location
+    serverName: postgreSQLServerName
+    databaseName: postgreSQLDatabaseName
+    adminUser: appServiceAPIDBHostDBUSER
+    adminPassword: appServiceAPIEnvVarDBPASS
+    environmentType: environmentType
+  }
+}
+
+output storageAccountConnectionString string = storage.outputs.storageAccountConnectionString
+
+// Add this module call
+module backendContainer './modules/container-instance.bicep' = {
+  name: 'backend-container'
+  params: {
+    location: location
+    name: '${appServiceAPIAppName}-container'
+    image: '${containerRegistry.outputs.registryLoginServer}/ie-bank-api:latest'
+    cpuCores: 1
+    memoryInGb: 2
+    environmentType: environmentType
+    registryServer: containerRegistry.outputs.registryLoginServer
+    registryUsername: containerRegistry.outputs.adminUsername
+    registryPassword: containerRegistry.outputs.adminPassword
+  }
+  dependsOn: [
+    containerRegistry
+  ]
+}
+

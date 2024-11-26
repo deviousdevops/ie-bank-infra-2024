@@ -32,9 +32,6 @@
         "appServiceAPIEnvVarDBNAME": {
             "value": "devious-db-dev"
         },
-        "appServiceAPIEnvVarDBPASS": {
-            "value": "<secure-password>"
-        },
         "appServiceAPIDBHostDBUSER": {
             "value": "iebankdbadmin"
         },
@@ -49,9 +46,6 @@
         },
         "keyVaultName": {
             "value": "devious-kv-dev"
-        },
-        "tenantId": {
-            "value": "<your-tenant-id>"
         },
         "storageAccountName": {
             "value": "deviousstordev"
