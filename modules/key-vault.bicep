@@ -5,11 +5,13 @@ param adminPassword string
 param registryName string
 param objectId string
 
+// Reference an existing container registry
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' existing = {
   name: registryName
   scope: resourceGroup()
 }
 
+// Create a new Key Vault
 resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
   name: name
   location: location
@@ -52,6 +54,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
   }
 }
 
+// Store the admin password in Key Vault
 resource adminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
   name: 'adminPassword'
@@ -60,20 +63,24 @@ resource adminPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-previ
   }
 }
 
+// Store the registry admin password in Key Vault
 resource registryPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
   name: 'registry-password'
   properties: {
-    value: containerRegistry.listCredentials().passwords[0].value
+    value: containerRegistry.listCredentials().passwords[0].value // Fetches the registry password dynamically
   }
 }
 
+// Store the registry admin username in Key Vault
 resource registryUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
   name: 'registry-username'
   properties: {
-    value: containerRegistry.name
+    value: containerRegistry.name // Stores the registry name as username
   }
 }
 
+// Output only the Key Vault URI (non-sensitive information)
 output keyVaultUri string = keyVault.properties.vaultUri
+
