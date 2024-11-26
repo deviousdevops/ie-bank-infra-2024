@@ -52,6 +52,57 @@ param applicationInsightsName string
 param logAnalyticsWorkspaceName string
 param staticWebAppName string
 
+
+module appInsights 'modules/app-insights.bicep' = {
+  name: 'appInsights'
+  params: {
+    location: location
+    name: applicationInsightsName
+    environmentType: environmentType
+  }
+}
+
+module logAnalytics 'modules/log-analytics.bicep' = {
+  name: 'logAnalytics'
+  params: {
+    location: location
+    name: logAnalyticsWorkspaceName
+    environmentType: environmentType
+  }
+}
+
+module containerRegistry 'modules/docker-registry.bicep' = {
+  name: 'containerRegistry'
+  params: {
+    location: location
+    name: containerRegistryName
+    sku: 'Standard'
+  }
+}
+
+module keyVault 'modules/key-vault.bicep' = {
+  name: 'keyVault'
+  params: {
+    location: location
+    name: keyVaultName
+    adminPassword: appServiceAPIEnvVarDBPASS
+    registryName: containerRegistry.name
+    objectId: subscription().subscriptionId
+  }
+  dependsOn: [
+    containerRegistry
+  ]
+}
+
+module storage 'modules/blob-storage.bicep' = {
+  name: 'storage'
+  params: {
+    location: location
+    storageAccountName: storageAccountName
+    environmentType: environmentType
+  }
+}
+
 module appService 'modules/app-service.bicep' = {
   name: 'appService-${userAlias}'
   params: {
@@ -77,56 +128,6 @@ module appService 'modules/app-service.bicep' = {
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
-
-module keyVault 'modules/key-vault.bicep' = {
-  name: 'keyVault'
-  params: {
-    location: location
-    name: keyVaultName
-    adminPassword: appServiceAPIEnvVarDBPASS
-    registryName: containerRegistry.name
-    objectId: subscription().subscriptionId
-  }
-  dependsOn: [
-    containerRegistry
-  ]
-}
-
-module storage 'modules/blob-storage.bicep' = {
-  name: 'storage'
-  params: {
-    location: location
-    storageAccountName: storageAccountName
-    environmentType: environmentType
-  }
-}
-
-module containerRegistry 'modules/docker-registry.bicep' = {
-  name: 'containerRegistry'
-  params: {
-    location: location
-    name: containerRegistryName
-    sku: 'Standard'
-  }
-}
-
-module appInsights 'modules/app-insights.bicep' = {
-  name: 'appInsights'
-  params: {
-    location: location
-    name: applicationInsightsName
-    environmentType: environmentType
-  }
-}
-
-module logAnalytics 'modules/log-analytics.bicep' = {
-  name: 'logAnalytics'
-  params: {
-    location: location
-    name: logAnalyticsWorkspaceName
-    environmentType: environmentType
-  }
-}
 
 module staticWebApp 'modules/static-web-frontend.bicep' = {
   name: 'staticWebApp'
