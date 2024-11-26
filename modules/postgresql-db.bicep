@@ -119,7 +119,7 @@ resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
           metricName: 'connections_failed'
           operator: 'GreaterThan'
           threshold: 1
-          timeAggregation: 'Average'
+          timeAggregation: 'Total'
         }
       ]
     }
