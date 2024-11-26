@@ -47,9 +47,6 @@
         "keyVaultName": {
             "value": "devious-kv-uat"
         },
-        "tenantId": {
-            "value": "<your-tenant-id>"
-        },
         "storageAccountName": {
             "value": "deviousstoruat"
         },
