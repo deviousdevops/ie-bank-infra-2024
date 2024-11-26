@@ -4,6 +4,7 @@ param name string
 param adminPassword string
 param registryName string
 param objectId string
+param githubActionsPrincipalId string
 
 // Reference an existing container registry
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' existing = {
@@ -50,7 +51,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
         }
       }
     ]
-    enableRbacAuthorization: false
+    enableRbacAuthorization: true
   }
 }
 
@@ -81,6 +82,16 @@ resource registryUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-pr
   }
 }
 
+// Add role assignment for GitHub Actions
+resource keyVaultSecretsUserRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(keyVault.id, githubActionsPrincipalId, 'Key Vault Secrets User')
+  scope: keyVault
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6') // Key Vault Secrets User role
+    principalId: githubActionsPrincipalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 // Output only the Key Vault URI (non-sensitive information)
 output keyVaultUri string = keyVault.properties.vaultUri
-
