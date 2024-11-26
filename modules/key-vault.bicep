@@ -2,7 +2,6 @@ param location string = resourceGroup().location
 param name string
 @secure()
 param adminPassword string
-param tenantId string = subscription().tenantId
 
 resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
   name: name

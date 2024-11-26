@@ -45,7 +45,6 @@ param appServiceAPIDBHostFLASK_APP string
 param appServiceAPIDBHostFLASK_DEBUG string
 
 // Add new parameters needed for other resources
-param vnetName string
 param keyVaultName string
 param storageAccountName string
 param tenantId string = subscription().tenantId
@@ -79,16 +78,6 @@ module appService 'modules/app-service.bicep' = {
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
-// Add other modules
-/* 
-module vnet 'modules/vnet.bicep' = {
-  name: 'vnet'
-  params: {
-    location: location
-    name: vnetName
-  }
-}
-*/
 
 module keyVault 'modules/key-vault.bicep' = {
   name: 'keyVault'
@@ -146,22 +135,6 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
     environmentType: environmentType
   }
 }
-// Add private endpoint after PostgreSQL and VNet are deployed
-/* 
-module privateEndpoint 'modules/private-endpoint.bicep' = {
-  name: 'privateEndpoint'
-  params: {
-    location: location
-    name: '${postgreSQLServerName}-pe'
-    postgresServerId: postgresSQLServer.id
-    vnetName: vnetName
-    subnetName: 'DatabaseSubnet'
-  }
-  dependsOn: [
-    vnet
-  ]
-}
-*/
 
 module postgresql 'modules/postgresql-db.bicep' = {
   name: 'postgresql-deployment'
@@ -177,7 +150,6 @@ module postgresql 'modules/postgresql-db.bicep' = {
 
 output storageAccountConnectionString string = storage.outputs.storageAccountConnectionString
 
-// Add this module call
 module backendContainer './modules/container-instance.bicep' = {
   name: 'backend-container'
   params: {
@@ -195,4 +167,3 @@ module backendContainer './modules/container-instance.bicep' = {
     containerRegistry
   ]
 }
-

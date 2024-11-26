@@ -10,7 +10,7 @@ param registryUsername string
 @secure()
 param registryPassword string
 
-resource containerInstance 'Microsoft.ContainerInstance/containerGroups@2021-07-01' = {
+resource containerInstance 'Microsoft.ContainerInstance/containerGroups@2021-09-01' = {
   name: name
   location: location
   properties: {
@@ -30,7 +30,12 @@ resource containerInstance 'Microsoft.ContainerInstance/containerGroups@2021-07-
               name: 'ENV'
               value: environmentType
             }
-            // Add other environment variables as needed
+          ]
+          ports: [
+            {
+              port: 80
+              protocol: 'TCP'
+            }
           ]
         }
       }
