@@ -26,6 +26,5 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-pr
 
 output registryLoginServer string = containerRegistry.properties.loginServer
 output adminUsername string = containerRegistry.properties.loginServer
-@secure()
 output adminPassword string = containerRegistry.listCredentials().passwords[0].value
 
