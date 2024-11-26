@@ -116,7 +116,7 @@ resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
         {
           name: 'QueryDuration'
           criterionType: 'StaticThresholdCriterion'
-          metricName: 'query_duration_ms'
+          metricName: 'active_queries_duration_ms'
           operator: 'GreaterThan'
           threshold: 500
           timeAggregation: 'Average'
