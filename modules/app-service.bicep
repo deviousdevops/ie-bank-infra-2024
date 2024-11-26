@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
-param appServicePlanName string = 'devious-asp-uat'
+param appServicePlanName string
 param appServiceAppName string
-param appServiceAPIAppName string = 'devious-be-uat'
+param appServiceAPIAppName string
 param appServiceAPIEnvVarENV string
 param appServiceAPIEnvVarDBHOST string
 param appServiceAPIEnvVarDBNAME string
@@ -47,7 +47,7 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   location: location
   sku: {
     name: appServicePlanSkuName
-    tier : 'Basic'
+    tier: 'Basic'
   }
   kind: 'linux'
   properties: {
@@ -104,13 +104,8 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = if (deploymentType 
   }
 }
 
-<<<<<<< HEAD
 // Docker App Service
 resource appServiceDockerApp 'Microsoft.Web/sites@2022-03-01' = if (deploymentType == 'docker') {
-=======
-
-resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
->>>>>>> bf7e348352a5a2f4eaf1bb02eefdf4abe27105af
   name: appServiceAppName
   location: location
   properties: {
@@ -126,9 +121,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-<<<<<<< HEAD
+// Output the hostname based on the deployment type
 output appServiceApiHostName string = (deploymentType == 'docker') ? appServiceDockerApp.properties.defaultHostName : appServiceAPIApp.properties.defaultHostName
-=======
-output appServiceAppHostName string = appServiceApp.properties.defaultHostName
->>>>>>> bf7e348352a5a2f4eaf1bb02eefdf4abe27105af
+
 
