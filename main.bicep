@@ -93,12 +93,13 @@ module keyVault 'modules/key-vault.bicep' = {
     registryName: containerRegistryName
     objectId: subscription().subscriptionId
     githubActionsPrincipalId: '25d8d697-c4a2-479f-96e0-15593a830ae5'
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Added line
   }
   dependsOn: [
     containerRegistry
+    logAnalytics // Ensure dependency
   ]
 }
-
 module storage 'modules/blob-storage.bicep' = {
   name: 'storage'
   params: {
@@ -116,6 +117,7 @@ module postgresql 'modules/postgresql-db.bicep' = {
     databaseName: postgreSQLDatabaseName
     postgreSQLAdminServicePrincipalObjectId: postgreSQLAdminServicePrincipalObjectId
     postgreSQLAdminServicePrincipalName: postgreSQLAdminServicePrincipalName
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId 
   }
   dependsOn: [
     logAnalytics
@@ -137,11 +139,13 @@ module appService 'modules/app-service.bicep' = {
     appServiceAPIEnvVarDBNAME: appServiceAPIEnvVarDBNAME
     appServiceAPIEnvVarDBPASS: appServiceAPIEnvVarDBPASS
     appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
     postgresql
     keyVault
     storage
+    logAnalytics
   ]
 }
 
