@@ -17,7 +17,7 @@ var sku = (environmentType == 'prod') ? {
   capacity: 2
 }
 
-resource postgresqlServer 'Microsoft.DBforPostgreSQL/servers@2021-06-01' = {
+resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   name: serverName
   location: location
   sku: sku
@@ -25,14 +25,9 @@ resource postgresqlServer 'Microsoft.DBforPostgreSQL/servers@2021-06-01' = {
     administratorLogin: adminUser
     administratorLoginPassword: adminPassword
     version: '12'
-    sslEnforcement: 'Enabled'
   }
 }
 
-resource postgresqlDatabase 'Microsoft.DBforPostgreSQL/servers/databases@2021-06-01' = {
-  name: '${serverName}/${databaseName}'
-  properties: {}
-}
 
-output postgresqlConnectionString string = 'Server=${postgresqlServer.properties.fullyQualifiedDomainName};Database=${databaseName};User Id=${adminUser};Password=${adminPassword};'
-
+output postgresqlServerFqdn string = postgresqlServer.properties.fullyQualifiedDomainName
+output databaseName string = databaseName

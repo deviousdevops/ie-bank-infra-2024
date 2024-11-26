@@ -85,7 +85,6 @@ module keyVault 'modules/key-vault.bicep' = {
     location: location
     name: keyVaultName
     adminPassword: appServiceAPIEnvVarDBPASS
-    tenantId: tenantId    // Add this line
 
   }
 }
