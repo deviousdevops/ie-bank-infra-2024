@@ -103,6 +103,18 @@ module storage 'modules/blob-storage.bicep' = {
   }
 }
 
+module postgresql 'modules/postgresql-db.bicep' = {
+  name: 'postgresql-deployment'
+  params: {
+    location: location
+    serverName: postgreSQLServerName
+    databaseName: postgreSQLDatabaseName
+    adminUser: appServiceAPIDBHostDBUSER
+    adminPassword: appServiceAPIEnvVarDBPASS
+    environmentType: environmentType
+  }
+}
+
 module appService 'modules/app-service.bicep' = {
   name: 'appService-${userAlias}'
   params: {
@@ -134,18 +146,6 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
   params: {
     location: location
     name: staticWebAppName
-    environmentType: environmentType
-  }
-}
-
-module postgresql 'modules/postgresql-db.bicep' = {
-  name: 'postgresql-deployment'
-  params: {
-    location: location
-    serverName: postgreSQLServerName
-    databaseName: postgreSQLDatabaseName
-    adminUser: appServiceAPIDBHostDBUSER
-    adminPassword: appServiceAPIEnvVarDBPASS
     environmentType: environmentType
   }
 }
