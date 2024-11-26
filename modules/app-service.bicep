@@ -141,4 +141,5 @@ resource appServiceDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@202
 }
 
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+output appServiceAPIAppHostName string = appServiceAPIApp.properties.defaultHostName
 
