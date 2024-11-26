@@ -8,13 +8,11 @@ param adminPassword string
 param environmentType string
 
 var sku = (environmentType == 'prod') ? {
-  name: 'GP_Gen5_4'
-  tier: 'GeneralPurpose'
-  capacity: 4
+  name: 'Standard_B1ms'
+  tier: 'Burstable'
 } : {
-  name: 'GP_Gen5_2'
-  tier: 'GeneralPurpose'
-  capacity: 2
+  name: 'Standard_B1ms'
+  tier: 'Burstable'
 }
 
 resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
