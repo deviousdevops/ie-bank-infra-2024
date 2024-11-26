@@ -1,9 +1,17 @@
 param location string = resourceGroup().location
 param name string
-@allowed(['Basic', 'Standard', 'Premium'])
-param sku string = (environmentType == 'prod') ? 'Standard' : 'Basic'
-@allowed(['nonprod', 'prod'])
+@allowed([
+  'nonprod'
+  'prod'
+])
 param environmentType string
+
+@allowed([
+  'Basic'
+  'Standard'
+  'Premium'
+])
+param sku string
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' = {
   name: name
@@ -16,7 +24,8 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-pr
   }
 }
 
-output containerRegistryLoginServer string = containerRegistry.properties.loginServer
-
-
+output registryLoginServer string = containerRegistry.properties.loginServer
+output adminUsername string = containerRegistry.properties.loginServer
+@secure()
+output adminPassword string = containerRegistry.listCredentials().passwords[0].value
 
