@@ -177,9 +177,9 @@ resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
   kind: 'shared'
   properties: {
     displayName: 'IE Bank SLO Dashboard'
-    serializedData: loadTextContent('workbooks/slo-dashboard.json')
+    serializedData: '{"version":"Notebook/1.0","items":[],"isLocked":false}'  // Basic empty workbook
     version: '1.0'
-    sourceId: appInsights.id
+    sourceId: appInsights.outputs.appInsightsId  // Changed from appInsights.id to appInsights.outputs.appInsightsId
     category: 'workbook'
   }
 }

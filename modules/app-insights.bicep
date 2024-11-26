@@ -86,3 +86,4 @@ resource loginSLOAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
 
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
 output appInsightsConnectionString string = appInsights.properties.ConnectionString
+output appInsightsId string = appInsights.id
