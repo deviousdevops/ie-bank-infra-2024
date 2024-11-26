@@ -92,11 +92,14 @@ module keyVault 'modules/key-vault.bicep' = {
     adminPassword: appServiceAPIEnvVarDBPASS
     registryName: containerRegistryName
     objectId: subscription().subscriptionId
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
     containerRegistry
   ]
 }
+
+
 
 module storage 'modules/blob-storage.bicep' = {
   name: 'storage'
