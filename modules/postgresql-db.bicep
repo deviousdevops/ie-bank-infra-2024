@@ -58,26 +58,45 @@ resource postgreSQLAdministrators 'Microsoft.DBforPostgreSQL/flexibleServers/adm
   ]
 }
 
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: '${postgresqlServer.name}-diagnostic'
+resource postgreSQLDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'PostgreSQLServerDiagnostic'
   scope: postgresqlServer
   properties: {
     workspaceId: workspaceResourceId
-    logs: [
-      {
-        category: 'PostgreSQLLogs'
-        enabled: true
-      }
-    ]
     metrics: [
       {
         category: 'AllMetrics'
         enabled: true
       }
     ]
+    logs: [
+      {
+        category: 'PostgreSQLLogs'
+        enabled: true
+      }
+      {
+        category: 'PostgreSQLFlexSessions'
+        enabled: true
+      }
+      {
+        category: 'PostgreSQLFlexQueryStoreRuntime'
+        enabled: true
+      }
+      {
+        category: 'PostgreSQLFlexQueryStoreWaitStats'
+        enabled: true
+      }
+      {
+        category: 'PostgreSQLFlexTableStats'
+        enabled: true
+      }
+      {
+        category: 'PostgreSQLFlexDatabaseXacts'
+        enabled: true
+      }
+    ]
   }
 }
-
 
 output postgresqlServerFqdn string = postgresqlServer.properties.fullyQualifiedDomainName
 output databaseName string = databaseName
