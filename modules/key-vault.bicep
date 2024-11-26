@@ -7,6 +7,7 @@ param objectId string
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' existing = {
   name: registryName
+  scope: resourceGroup()
 }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
