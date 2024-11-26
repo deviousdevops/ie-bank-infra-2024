@@ -52,6 +52,10 @@ param applicationInsightsName string
 param logAnalyticsWorkspaceName string
 param staticWebAppName string
 
+// Add these new parameters
+param postgreSQLAdminServicePrincipalObjectId string
+param postgreSQLAdminServicePrincipalName string
+
 
 module appInsights 'modules/app-insights.bicep' = {
   name: 'appInsights'
@@ -109,10 +113,12 @@ module postgresql 'modules/postgresql-db.bicep' = {
     location: location
     serverName: postgreSQLServerName
     databaseName: postgreSQLDatabaseName
-    adminUser: appServiceAPIDBHostDBUSER
-    adminPassword: appServiceAPIEnvVarDBPASS
-    environmentType: environmentType
+    postgreSQLAdminServicePrincipalObjectId: postgreSQLAdminServicePrincipalObjectId
+    postgreSQLAdminServicePrincipalName: postgreSQLAdminServicePrincipalName
   }
+  dependsOn: [
+    logAnalytics
+  ]
 }
 
 module appService 'modules/app-service.bicep' = {
