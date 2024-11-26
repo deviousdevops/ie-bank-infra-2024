@@ -115,6 +115,7 @@ module postgresql 'modules/postgresql-db.bicep' = {
     databaseName: postgreSQLDatabaseName
     postgreSQLAdminServicePrincipalObjectId: postgreSQLAdminServicePrincipalObjectId
     postgreSQLAdminServicePrincipalName: postgreSQLAdminServicePrincipalName
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Corrected
   }
   dependsOn: [
     logAnalytics
