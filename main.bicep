@@ -5,7 +5,7 @@
 ])
 param environmentType string = 'nonprod'
 @sys.description('The user alias to add to the deployment name')
-param userAlias string = 'aguadamillas'
+param userAlias string = 'deviousinc'
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
@@ -45,14 +45,81 @@ param appServiceAPIDBHostFLASK_APP string
 param appServiceAPIDBHostFLASK_DEBUG string
 
 // Add new parameters needed for other resources
-param vnetName string
 param keyVaultName string
 param storageAccountName string
-param tenantId string = subscription().tenantId
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
 param staticWebAppName string
+
+// Add these new parameters
+param postgreSQLAdminServicePrincipalObjectId string
+param postgreSQLAdminServicePrincipalName string
+
+
+module appInsights 'modules/app-insights.bicep' = {
+  name: 'appInsights'
+  params: {
+    location: location
+    name: applicationInsightsName
+    environmentType: environmentType
+  }
+}
+
+module logAnalytics 'modules/log-analytics.bicep' = {
+  name: 'logAnalytics'
+  params: {
+    location: location
+    name: logAnalyticsWorkspaceName
+    environmentType: environmentType
+  }
+}
+
+module containerRegistry 'modules/docker-registry.bicep' = {
+  name: 'containerRegistry'
+  params: {
+    location: location
+    name: containerRegistryName
+    sku: 'Standard'
+  }
+}
+
+module keyVault 'modules/key-vault.bicep' = {
+  name: 'keyVault'
+  params: {
+    location: location
+    name: keyVaultName
+    adminPassword: appServiceAPIEnvVarDBPASS
+    registryName: containerRegistryName
+    objectId: subscription().subscriptionId
+  }
+  dependsOn: [
+    containerRegistry
+  ]
+}
+
+module storage 'modules/blob-storage.bicep' = {
+  name: 'storage'
+  params: {
+    location: location
+    storageAccountName: storageAccountName
+    environmentType: environmentType
+  }
+}
+
+module postgresql 'modules/postgresql-db.bicep' = {
+  name: 'postgresql-deployment'
+  params: {
+    location: location
+    serverName: postgreSQLServerName
+    databaseName: postgreSQLDatabaseName
+    postgreSQLAdminServicePrincipalObjectId: postgreSQLAdminServicePrincipalObjectId
+    postgreSQLAdminServicePrincipalName: postgreSQLAdminServicePrincipalName
+  }
+  dependsOn: [
+    logAnalytics
+  ]
+}
 
 module appService 'modules/app-service.bicep' = {
   name: 'appService-${userAlias}'
@@ -79,64 +146,6 @@ module appService 'modules/app-service.bicep' = {
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
-// Add other modules
-/* 
-module vnet 'modules/vnet.bicep' = {
-  name: 'vnet'
-  params: {
-    location: location
-    name: vnetName
-  }
-}
-*/
-
-module keyVault 'modules/key-vault.bicep' = {
-  name: 'keyVault'
-  params: {
-    location: location
-    name: keyVaultName
-    adminPassword: appServiceAPIEnvVarDBPASS
-    tenantId: tenantId    // Add this line
-
-  }
-}
-
-module storage 'modules/blob-storage.bicep' = {
-  name: 'storage'
-  params: {
-    location: location
-    storageAccountName: storageAccountName
-    environmentType: environmentType
-  }
-}
-
-module containerRegistry 'modules/docker-registry.bicep' = {
-  name: 'containerRegistry'
-  params: {
-    location: location
-    name: containerRegistryName
-    sku: 'Standard'
-    environmentType: environmentType
-  }
-}
-
-module appInsights 'modules/app-insights.bicep' = {
-  name: 'appInsights'
-  params: {
-    location: location
-    name: applicationInsightsName
-    environmentType: environmentType
-  }
-}
-
-module logAnalytics 'modules/log-analytics.bicep' = {
-  name: 'logAnalytics'
-  params: {
-    location: location
-    name: logAnalyticsWorkspaceName
-    environmentType: environmentType
-  }
-}
 
 module staticWebApp 'modules/static-web-frontend.bicep' = {
   name: 'staticWebApp'
@@ -146,53 +155,5 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
     environmentType: environmentType
   }
 }
-// Add private endpoint after PostgreSQL and VNet are deployed
-/* 
-module privateEndpoint 'modules/private-endpoint.bicep' = {
-  name: 'privateEndpoint'
-  params: {
-    location: location
-    name: '${postgreSQLServerName}-pe'
-    postgresServerId: postgresSQLServer.id
-    vnetName: vnetName
-    subnetName: 'DatabaseSubnet'
-  }
-  dependsOn: [
-    vnet
-  ]
-}
-*/
-
-module postgresql 'modules/postgresql-db.bicep' = {
-  name: 'postgresql-deployment'
-  params: {
-    location: location
-    serverName: postgreSQLServerName
-    databaseName: postgreSQLDatabaseName
-    adminUser: appServiceAPIDBHostDBUSER
-    adminPassword: appServiceAPIEnvVarDBPASS
-    environmentType: environmentType
-  }
-}
 
 output storageAccountConnectionString string = storage.outputs.storageAccountConnectionString
-
-// Add this module call
-module backendContainer './modules/container-instance.bicep' = {
-  name: 'backend-container'
-  params: {
-    location: location
-    name: '${appServiceAPIAppName}-container'
-    image: '${containerRegistry.outputs.registryLoginServer}/ie-bank-api:latest'
-    cpuCores: 1
-    memoryInGb: 2
-    environmentType: environmentType
-    registryServer: containerRegistry.outputs.registryLoginServer
-    registryUsername: containerRegistry.outputs.adminUsername
-    registryPassword: containerRegistry.outputs.adminPassword
-  }
-  dependsOn: [
-    containerRegistry
-  ]
-}
-
