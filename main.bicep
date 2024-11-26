@@ -47,7 +47,6 @@ param appServiceAPIDBHostFLASK_DEBUG string
 // Add new parameters needed for other resources
 param keyVaultName string
 param storageAccountName string
-param tenantId string = subscription().tenantId
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
@@ -85,8 +84,11 @@ module keyVault 'modules/key-vault.bicep' = {
     location: location
     name: keyVaultName
     adminPassword: appServiceAPIEnvVarDBPASS
-
+    registryName: containerRegistry.name
   }
+  dependsOn: [
+    containerRegistry
+  ]
 }
 
 module storage 'modules/blob-storage.bicep' = {
@@ -104,7 +106,6 @@ module containerRegistry 'modules/docker-registry.bicep' = {
     location: location
     name: containerRegistryName
     sku: 'Standard'
-    environmentType: environmentType
   }
 }
 
@@ -148,21 +149,3 @@ module postgresql 'modules/postgresql-db.bicep' = {
 }
 
 output storageAccountConnectionString string = storage.outputs.storageAccountConnectionString
-
-module backendContainer './modules/container-instance.bicep' = {
-  name: 'backend-container'
-  params: {
-    location: location
-    name: '${appServiceAPIAppName}-container'
-    image: '${containerRegistry.outputs.registryLoginServer}/ie-bank-api:latest'
-    cpuCores: 1
-    memoryInGb: 2
-    environmentType: environmentType
-    registryServer: containerRegistry.outputs.registryLoginServer
-    registryUsername: containerRegistry.outputs.adminUsername
-    registryPassword: containerRegistry.outputs.adminPassword
-  }
-  dependsOn: [
-    containerRegistry
-  ]
-}
