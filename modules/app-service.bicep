@@ -10,6 +10,7 @@ param appServiceAPIEnvVarDBPASS string
 param appServiceAPIDBHostDBUSER string
 param appServiceAPIDBHostFLASK_APP string
 param appServiceAPIDBHostFLASK_DEBUG string
+param workspaceResourceId string
 @allowed([
   'nonprod'
   'prod'
@@ -79,6 +80,46 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
+// Add diagnostic settings for API App Service
+resource appServiceAPIAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${appServiceAPIApp.name}-diagnostic'
+  scope: appServiceAPIApp
+  properties: {
+    workspaceId: workspaceResourceId
+    logs: [
+      {
+        category: 'AppServiceHTTPLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServiceConsoleLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServiceAppLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServiceAuditLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServiceIPSecAuditLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServicePlatformLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+  }
+}
 
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAppName
@@ -93,6 +134,47 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
       appCommandLine: 'pm2 serve /home/site/wwwroot --spa --no-daemon'
       appSettings: []
     }
+  }
+}
+
+// Add diagnostic settings for Frontend App Service
+resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${appServiceApp.name}-diagnostic'
+  scope: appServiceApp
+  properties: {
+    workspaceId: workspaceResourceId
+    logs: [
+      {
+        category: 'AppServiceHTTPLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServiceConsoleLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServiceAppLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServiceAuditLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServiceIPSecAuditLogs'
+        enabled: true
+      }
+      {
+        category: 'AppServicePlatformLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
   }
 }
 

@@ -5,6 +5,7 @@ param adminPassword string
 param registryName string
 param objectId string
 param githubActionsPrincipalId string
+param workspaceResourceId string
 
 // Reference an existing container registry
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' existing = {
@@ -90,6 +91,26 @@ resource keyVaultSecretsUserRole 'Microsoft.Authorization/roleAssignments@2022-0
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6') // Key Vault Secrets User role
     principalId: githubActionsPrincipalId
     principalType: 'ServicePrincipal'
+  }
+}
+
+resource keyVaultDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${keyVault.name}-diagnostic'
+  scope: keyVault
+  properties: {
+    workspaceId: workspaceResourceId
+    logs: [
+      {
+        category: 'AuditEvent'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
   }
 }
 
