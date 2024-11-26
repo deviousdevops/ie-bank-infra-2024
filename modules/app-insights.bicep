@@ -12,6 +12,7 @@ param applicationType string = 'web'
   'uat'
 ])
 param environmentType string = 'uat'
+param appServiceAppHostName string
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: name
@@ -49,7 +50,7 @@ resource appInsightsAvailabilityTest 'Microsoft.Insights/webtests@2022-06-15' = 
       }
     ]
     Configuration: {
-      WebTest: '<WebTest Name="Login Response Time Test" Enabled="True" Timeout="120" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010"><RequestSettings><Request Method="POST" Version="1.1" Url="${appServiceApp.properties.defaultHostName}/api/login" /></RequestSettings></WebTest>'
+      WebTest: '<WebTest Name="Login Response Time Test" Enabled="True" Timeout="120" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010"><RequestSettings><Request Method="POST" Version="1.1" Url="https://${appServiceAppHostName}/api/login" /></RequestSettings></WebTest>'
     }
     SyntheticMonitorId: '${name}-login-test'
   }
@@ -71,7 +72,8 @@ resource loginSLOAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
       'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
       allOf: [
         {
-          criterionType: 'StaticThreshold'
+          name: 'LoginResponseTime'
+          criterionType: 'StaticThresholdCriterion'
           metricName: 'requests/duration'
           operator: 'GreaterThan'
           threshold: 1000

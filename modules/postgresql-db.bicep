@@ -114,7 +114,8 @@ resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
       'odata.type': 'Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria'
       allOf: [
         {
-          criterionType: 'StaticThreshold'
+          name: 'QueryDuration'
+          criterionType: 'StaticThresholdCriterion'
           metricName: 'query_duration_ms'
           operator: 'GreaterThan'
           threshold: 500

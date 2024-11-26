@@ -63,7 +63,11 @@ module appInsights 'modules/app-insights.bicep' = {
     location: location
     name: applicationInsightsName
     environmentType: environmentType
+    appServiceAppHostName: appService.outputs.appServiceAppHostName
   }
+  dependsOn: [
+    appService
+  ]
 }
 
 module logAnalytics 'modules/log-analytics.bicep' = {
