@@ -81,7 +81,11 @@ module containerRegistry 'modules/docker-registry.bicep' = {
     location: location
     name: containerRegistryName
     sku: 'Standard'
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
+  dependsOn: [
+    logAnalytics
+  ]
 }
 
 module keyVault 'modules/key-vault.bicep' = {
