@@ -162,3 +162,16 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
 }
 
 output storageAccountConnectionString string = storage.outputs.storageAccountConnectionString
+
+resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
+  name: guid('Devious-SLO-Monitoring')
+  location: location
+  kind: 'shared'
+  properties: {
+    displayName: 'IE Bank SLO Dashboard'
+    serializedData: loadTextContent('workbooks/slo-dashboard.json')
+    version: '1.0'
+    sourceId: appInsights.id
+    category: 'workbook'
+  }
+}

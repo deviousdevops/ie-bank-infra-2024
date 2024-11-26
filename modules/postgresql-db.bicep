@@ -98,6 +98,33 @@ resource postgreSQLDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01
   }
 }
 
+resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+  name: 'Query-Performance-Alert'
+  location: 'global'
+  properties: {
+    description: 'Alert when query duration exceeds 500ms'
+    severity: 2
+    enabled: true
+    scopes: [
+      postgresqlServer.id
+    ]
+    evaluationFrequency: 'PT1M'
+    windowSize: 'PT5M'
+    criteria: {
+      'odata.type': 'Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria'
+      allOf: [
+        {
+          criterionType: 'StaticThreshold'
+          metricName: 'query_duration_ms'
+          operator: 'GreaterThan'
+          threshold: 500
+          timeAggregation: 'Average'
+        }
+      ]
+    }
+  }
+}
+
 output postgresqlServerFqdn string = postgresqlServer.properties.fullyQualifiedDomainName
 output databaseName string = databaseName
 output serverId string = postgresqlServer.id
