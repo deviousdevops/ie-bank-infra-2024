@@ -47,8 +47,8 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
     serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'DOCKER|deviousacrdev.azurecr.io/backend:latest'
-      alwaysOn: false
+      linuxFxVersion: 'DOCKER|${dockerRegistryName}.azurecr.io/backend:latest'
+      alwaysOn: true
       ftpsState: 'FtpsOnly'
       appSettings: [
         {
@@ -73,11 +73,11 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'FLASK_APP'
-          value: appServiceAPIDBHostFLASK_APP
+          value: 'iebank_api'
         }
         {
-          name: 'FLASK_DEBUG'
-          value: appServiceAPIDBHostFLASK_DEBUG
+          name: 'FLASK_ENV'
+          value: 'production'
         }
         {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
@@ -98,6 +98,10 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
           value: 'false'
+        }
+        {
+          name: 'WEBSITES_PORT'
+          value: '8000'
         }
       ]
     }

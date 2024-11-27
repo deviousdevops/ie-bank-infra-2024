@@ -33,13 +33,13 @@
             "value": "devious-db-uat"
         },
         "appServiceAPIEnvVarDBPASS": {
-            "value": "<secure-password>"
+            "value": "IE.Bank.DB.Admin.Pa$$"
         },
         "appServiceAPIDBHostDBUSER": {
             "value": "iebankdbadmin"
         },
         "appServiceAPIDBHostFLASK_APP": {
-            "value": "app:app"
+            "value": "iebank_api"
         },
         "appServiceAPIDBHostFLASK_DEBUG": {
             "value": "1"

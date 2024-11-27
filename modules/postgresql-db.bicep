@@ -4,6 +4,9 @@ param databaseName string
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
 param workspaceResourceId string
+param administratorLogin string
+@secure()
+param administratorLoginPassword string
 
 var sku = {
   name: 'Standard_B1ms'
@@ -16,6 +19,8 @@ resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01'
   sku: sku
   properties: {
     version: '15'
+    administratorLogin: administratorLogin
+    administratorLoginPassword: administratorLoginPassword
     createMode: 'Default'
     highAvailability: {
       mode: 'Disabled'
@@ -30,7 +35,7 @@ resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01'
     }
     authConfig: {
       activeDirectoryAuth: 'Enabled'
-      passwordAuth: 'Disabled'
+      passwordAuth: 'Enabled'
       tenantId: subscription().tenantId
     }
   }
