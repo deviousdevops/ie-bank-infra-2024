@@ -85,6 +85,7 @@ module containerRegistry 'modules/docker-registry.bicep' = {
     name: containerRegistryName
     sku: 'Standard'
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
+    githubPrincipalId: '25d8d697-c4a2-479f-96e0-15593a830ae5'
   }
   dependsOn: [
     logAnalytics

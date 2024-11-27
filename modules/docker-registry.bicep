@@ -2,6 +2,7 @@ param location string = resourceGroup().location
 param name string
 param sku string
 param workspaceResourceId string
+param githubPrincipalId string = '25d8d697-c4a2-479f-96e0-15593a830ae5'
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' = {
   name: name
@@ -37,5 +38,14 @@ resource containerRegistryDiagnostics 'Microsoft.Insights/diagnosticSettings@202
   }
 }
 
-output registryLoginServer string = containerRegistry.properties.loginServer
+resource acrPushRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(containerRegistry.id, githubPrincipalId, 'acrpush')
+  scope: containerRegistry
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '8311e382-0749-4cb8-b61a-304f252e45ec')
+    principalId: githubPrincipalId
+    principalType: 'ServicePrincipal'
+  }
+}
 
+output registryLoginServer string = containerRegistry.properties.loginServer
