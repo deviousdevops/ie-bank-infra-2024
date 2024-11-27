@@ -16,8 +16,13 @@ param workspaceResourceId string
   'prod'
 ])
 param environmentType string
+param dockerRegistryName string = 'deviousacrdev'
 
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
+
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' existing = {
+  name: dockerRegistryName
+}
 
 resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   name: appServicePlanName
@@ -35,11 +40,14 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
 resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAPIAppName
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'PYTHON|3.11'
+      linuxFxVersion: 'DOCKER|deviousacrdev.azurecr.io/backend:latest'
       alwaysOn: false
       ftpsState: 'FtpsOnly'
       appSettings: [
@@ -74,6 +82,22 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
           value: 'true'
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: 'https://${dockerRegistryName}.azurecr.io'
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_USERNAME'
+          value: dockerRegistryName
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
+          value: containerRegistry.listCredentials().passwords[0].value
+        }
+        {
+          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
+          value: 'false'
         }
       ]
     }
@@ -179,4 +203,3 @@ resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05
 }
 
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
-
