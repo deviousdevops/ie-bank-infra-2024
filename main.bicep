@@ -63,7 +63,6 @@ module appInsights 'modules/app-insights.bicep' = {
     location: location
     name: applicationInsightsName
     environmentType: environmentType
-    appServiceAppHostName: appService.outputs.appServiceAppHostName
   }
   dependsOn: [
     appService
@@ -125,7 +124,7 @@ module postgresql 'modules/postgresql-db.bicep' = {
     databaseName: postgreSQLDatabaseName
     postgreSQLAdminServicePrincipalObjectId: postgreSQLAdminServicePrincipalObjectId
     postgreSQLAdminServicePrincipalName: postgreSQLAdminServicePrincipalName
-    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId 
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
     logAnalytics
