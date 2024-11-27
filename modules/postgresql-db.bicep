@@ -98,6 +98,34 @@ resource postgreSQLDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01
   }
 }
 
+resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+  name: 'Failed-Connections-Alert'
+  location: 'global'
+  properties: {
+    description: 'Alert when there are failed connections'
+    severity: 2
+    enabled: true
+    scopes: [
+      postgresqlServer.id
+    ]
+    evaluationFrequency: 'PT1M'
+    windowSize: 'PT5M'
+    criteria: {
+      'odata.type': 'Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria'
+      allOf: [
+        {
+          name: 'Connections-Failed'
+          criterionType: 'StaticThresholdCriterion'
+          metricName: 'connections_failed'
+          operator: 'GreaterThan'
+          threshold: 1
+          timeAggregation: 'Total'
+        }
+      ]
+    }
+  }
+}
+
 output postgresqlServerFqdn string = postgresqlServer.properties.fullyQualifiedDomainName
 output databaseName string = databaseName
 output serverId string = postgresqlServer.id

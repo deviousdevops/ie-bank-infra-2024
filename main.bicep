@@ -64,6 +64,9 @@ module appInsights 'modules/app-insights.bicep' = {
     name: applicationInsightsName
     environmentType: environmentType
   }
+  dependsOn: [
+    appService
+  ]
 }
 
 module logAnalytics 'modules/log-analytics.bicep' = {
@@ -81,7 +84,11 @@ module containerRegistry 'modules/docker-registry.bicep' = {
     location: location
     name: containerRegistryName
     sku: 'Standard'
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
+  dependsOn: [
+    logAnalytics
+  ]
 }
 
 module keyVault 'modules/key-vault.bicep' = {
@@ -117,7 +124,7 @@ module postgresql 'modules/postgresql-db.bicep' = {
     databaseName: postgreSQLDatabaseName
     postgreSQLAdminServicePrincipalObjectId: postgreSQLAdminServicePrincipalObjectId
     postgreSQLAdminServicePrincipalName: postgreSQLAdminServicePrincipalName
-    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId 
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
     logAnalytics
@@ -162,3 +169,16 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
 }
 
 output storageAccountConnectionString string = storage.outputs.storageAccountConnectionString
+
+resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
+  name: guid('Devious-SLO-Monitoring')
+  location: location
+  kind: 'shared'
+  properties: {
+    displayName: 'IE Bank SLO Dashboard'
+    serializedData: '{"version":"Notebook/1.0","items":[],"isLocked":false}'  // Basic empty workbook
+    version: '1.0'
+    sourceId: appInsights.outputs.appInsightsId  // Changed from appInsights.id to appInsights.outputs.appInsightsId
+    category: 'workbook'
+  }
+}

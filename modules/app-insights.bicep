@@ -29,5 +29,34 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
+resource loginSLOAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
+  name: 'Login-SLO-Alert'
+  location: 'global'
+  properties: {
+    description: 'Alert when login response time exceeds 2 seconds'
+    severity: 2
+    enabled: true
+    scopes: [
+      appInsights.id
+    ]
+    evaluationFrequency: 'PT1M'
+    windowSize: 'PT5M'
+    criteria: {
+      'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
+      allOf: [
+        {
+          name: 'LoginResponseTime'
+          criterionType: 'StaticThresholdCriterion'
+          metricName: 'requests/duration'
+          operator: 'GreaterThan'
+          threshold: 1000
+          timeAggregation: 'Average'
+        }
+      ]
+    }
+  }
+}
+
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
 output appInsightsConnectionString string = appInsights.properties.ConnectionString
+output appInsightsId string = appInsights.id
