@@ -77,7 +77,7 @@ resource loginSLOAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
           metricName: 'requests/duration'
           operator: 'GreaterThan'
           threshold: 1000
-          timeAggregation: 'P95'
+          timeAggregation: 'Average'
         }
       ]
     }
