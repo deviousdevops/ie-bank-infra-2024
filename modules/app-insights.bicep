@@ -50,7 +50,13 @@ resource appInsightsAvailabilityTest 'Microsoft.Insights/webtests@2022-06-15' = 
       }
     ]
     Configuration: {
-      WebTest: '<WebTest Name="Login Response Time Test" Enabled="True" Timeout="120" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010"><RequestSettings><Request Method="POST" Version="1.1" Url="https://${appServiceAppHostName}/api/login" /></RequestSettings></WebTest>'
+      WebTest: '''
+        <WebTest Name="Login Response Time Test" Id="${guid(name)}" Enabled="True" CssProjectStructure="" CssIteration="" Timeout="120" WorkItemIds="" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010" Description="" CredentialUserName="" CredentialPassword="" PreAuthenticate="True" Proxy="default" StopOnError="False" RecordedResultFile="" ResultsLocale="">
+          <Items>
+            <Request Method="POST" Version="1.1" Url="https://${appServiceAppHostName}/api/login" ThinkTime="0" Timeout="120" ParseDependentRequests="False" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="200" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+          </Items>
+        </WebTest>
+      '''
     }
     SyntheticMonitorId: '${name}-login-test'
   }
