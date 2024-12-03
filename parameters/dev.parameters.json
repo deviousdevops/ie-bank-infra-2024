@@ -51,7 +51,7 @@
 
         // Azure Resource Configuration
         "keyVaultName": {
-            "value": "devious-kv3-dev"
+            "value": "devious-kv4-dev"
         },
         "storageAccountName": {
             "value": "deviousstordev"
