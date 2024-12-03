@@ -1,3 +1,4 @@
+@description('Module to deploy Application Insights for monitoring')
 param location string = resourceGroup().location
 param name string = 'devious-ai-uat'
 
@@ -6,6 +7,7 @@ param name string = 'devious-ai-uat'
   'other'
 ])
 param applicationType string = 'web'
+
 @allowed([
   'nonprod'
   'prod'
@@ -16,7 +18,7 @@ param environmentType string = 'uat'
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: name
   location: location
-  kind: 'web'
+  kind: applicationType
   tags: {
     environment: environmentType
   }
@@ -60,3 +62,4 @@ resource loginSLOAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
 output appInsightsConnectionString string = appInsights.properties.ConnectionString
 output appInsightsId string = appInsights.id
+
