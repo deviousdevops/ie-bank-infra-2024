@@ -88,6 +88,29 @@ module logAnalytics 'modules/log-analytics.bicep' = {
   }
 }
 
+module appService 'modules/app-service.bicep' = {
+  name: 'appService-${userAlias}'
+  params: {
+    location: location
+    environmentType: environmentType
+    appServiceAppName: appServiceAppName
+    appServiceAPIAppName: appServiceAPIAppName
+    appServicePlanName: appServicePlanName
+    appServiceAPIDBHostDBUSER: appServiceAPIDBHostDBUSER
+    appServiceAPIDBHostFLASK_APP: appServiceAPIDBHostFLASK_APP
+    appServiceAPIDBHostFLASK_DEBUG: appServiceAPIDBHostFLASK_DEBUG
+    appServiceAPIEnvVarDBHOST: appServiceAPIEnvVarDBHOST
+    appServiceAPIEnvVarDBNAME: appServiceAPIEnvVarDBNAME
+    appServiceAPIEnvVarDBPASS: appServiceAPIEnvVarDBPASS
+    appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
+  }
+  dependsOn: [
+    postgresql
+    logAnalytics
+  ]
+}
+
 module containerRegistry 'modules/docker-registry.bicep' = {
   name: 'containerRegistry'
   params: {
@@ -95,9 +118,11 @@ module containerRegistry 'modules/docker-registry.bicep' = {
     name: containerRegistryName
     sku: 'Standard'
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
+    backendAppServicePrincipalId: appService.outputs.backendPrincipalId
   }
   dependsOn: [
     logAnalytics
+    appService
   ]
 }
 
@@ -110,11 +135,11 @@ module keyVault 'modules/key-vault.bicep' = {
     registryName: containerRegistryName
     objectId: subscription().subscriptionId
     githubActionsPrincipalId: '25d8d697-c4a2-479f-96e0-15593a830ae5'
-    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Added line
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
     containerRegistry
-    logAnalytics // Ensure dependency
+    logAnalytics
   ]
 }
 
@@ -138,31 +163,6 @@ module postgresql 'modules/postgresql-db.bicep' = {
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
-    logAnalytics
-  ]
-}
-
-module appService 'modules/app-service.bicep' = {
-  name: 'appService-${userAlias}'
-  params: {
-    location: location
-    environmentType: environmentType
-    appServiceAppName: appServiceAppName
-    appServiceAPIAppName: appServiceAPIAppName
-    appServicePlanName: appServicePlanName
-    appServiceAPIDBHostDBUSER: appServiceAPIDBHostDBUSER
-    appServiceAPIDBHostFLASK_APP: appServiceAPIDBHostFLASK_APP
-    appServiceAPIDBHostFLASK_DEBUG: appServiceAPIDBHostFLASK_DEBUG
-    appServiceAPIEnvVarDBHOST: appServiceAPIEnvVarDBHOST
-    appServiceAPIEnvVarDBNAME: appServiceAPIEnvVarDBNAME
-    appServiceAPIEnvVarDBPASS: appServiceAPIEnvVarDBPASS
-    appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
-    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
-  }
-  dependsOn: [
-    postgresql
-    keyVault
-    storage
     logAnalytics
   ]
 }
@@ -192,3 +192,5 @@ resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
     category: 'workbook'
   }
 }
+
+

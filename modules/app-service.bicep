@@ -39,6 +39,9 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
 resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAPIAppName
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
@@ -185,5 +188,9 @@ resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05
 
 // Output the hostname for the frontend app
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+output backendPrincipalId string = appServiceAPIApp.identity.principalId
+
+
+
 
 
