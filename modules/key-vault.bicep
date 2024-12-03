@@ -1,3 +1,4 @@
+@description('Module to deploy a Key Vault and store secrets, along with configuring diagnostics and role assignments')
 param location string = resourceGroup().location
 param name string
 @secure()
@@ -94,6 +95,7 @@ resource keyVaultSecretsUserRole 'Microsoft.Authorization/roleAssignments@2022-0
   }
 }
 
+// Define diagnostic settings for Key Vault
 resource keyVaultDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: '${keyVault.name}-diagnostic'
   scope: keyVault
@@ -114,5 +116,6 @@ resource keyVaultDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-
   }
 }
 
-// Output only the Key Vault URI (non-sensitive information)
+// Output the Key Vault URI (non-sensitive information)
 output keyVaultUri string = keyVault.properties.vaultUri
+

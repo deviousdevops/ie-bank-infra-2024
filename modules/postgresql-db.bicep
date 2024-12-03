@@ -1,3 +1,4 @@
+@description('Module to deploy a PostgreSQL Flexible Server, configure firewall rules, administrators, diagnostics, and alerting')
 param location string
 param serverName string
 param databaseName string
@@ -5,11 +6,13 @@ param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
 param workspaceResourceId string
 
+// Define SKU for the PostgreSQL server
 var sku = {
   name: 'Standard_B1ms'
   tier: 'Burstable'
 }
 
+// Define the PostgreSQL Flexible Server resource
 resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
   name: toLower(replace(serverName, '_', '-'))
   location: location
@@ -36,6 +39,7 @@ resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01'
   }
 }
 
+// Define firewall rule to allow all Azure services and resources
 resource firewallRule 'Microsoft.DBforPostgreSQL/flexibleServers/firewallRules@2022-12-01' = {
   name: 'AllowAllAzureServicesAndResourcesWithinAzureIps'
   parent: postgresqlServer
@@ -45,6 +49,7 @@ resource firewallRule 'Microsoft.DBforPostgreSQL/flexibleServers/firewallRules@2
   }
 }
 
+// Define PostgreSQL administrators (service principal)
 resource postgreSQLAdministrators 'Microsoft.DBforPostgreSQL/flexibleServers/administrators@2022-12-01' = {
   parent: postgresqlServer
   name: postgreSQLAdminServicePrincipalObjectId
@@ -58,6 +63,7 @@ resource postgreSQLAdministrators 'Microsoft.DBforPostgreSQL/flexibleServers/adm
   ]
 }
 
+// Configure diagnostic settings for the PostgreSQL server
 resource postgreSQLDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'PostgreSQLServerDiagnostic'
   scope: postgresqlServer
@@ -98,6 +104,7 @@ resource postgreSQLDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01
   }
 }
 
+// Define alert for failed connections to PostgreSQL server
 resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   name: 'Failed-Connections-Alert'
   location: 'global'
@@ -126,6 +133,7 @@ resource queryPerformanceAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   }
 }
 
+// Output PostgreSQL server FQDN and other information
 output postgresqlServerFqdn string = postgresqlServer.properties.fullyQualifiedDomainName
 output databaseName string = databaseName
 output serverId string = postgresqlServer.id

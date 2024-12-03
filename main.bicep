@@ -1,46 +1,57 @@
 @sys.description('The environment type (nonprod or prod)')
-@allowed([
-  'nonprod'
-  'prod'
-])
+@allowed(['nonprod', 'prod'])
 param environmentType string = 'nonprod'
+
 @sys.description('The user alias to add to the deployment name')
 param userAlias string = 'deviousinc'
+
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
 param postgreSQLServerName string = 'ie-bank-db-server-dev'
+
 @sys.description('The PostgreSQL Database name')
 @minLength(3)
 @maxLength(24)
 param postgreSQLDatabaseName string = 'ie-bank-db'
+
 @sys.description('The App Service Plan name')
 @minLength(3)
 @maxLength(24)
 param appServicePlanName string = 'ie-bank-app-sp-dev'
+
 @sys.description('The Web App name (frontend)')
 @minLength(3)
 @maxLength(24)
 param appServiceAppName string = 'ie-bank-dev'
+
 @sys.description('The API App name (backend)')
 @minLength(3)
 @maxLength(24)
 param appServiceAPIAppName string = 'ie-bank-api-dev'
+
 @sys.description('The Azure location where the resources will be deployed')
 param location string = resourceGroup().location
+
 @sys.description('The value for the environment variable ENV')
 param appServiceAPIEnvVarENV string
+
 @sys.description('The value for the environment variable DBHOST')
 param appServiceAPIEnvVarDBHOST string
+
 @sys.description('The value for the environment variable DBNAME')
 param appServiceAPIEnvVarDBNAME string
+
 @sys.description('The value for the environment variable DBPASS')
 @secure()
 param appServiceAPIEnvVarDBPASS string
+
 @sys.description('The value for the environment variable DBUSER')
 param appServiceAPIDBHostDBUSER string
+
 @sys.description('The value for the environment variable FLASK_APP')
 param appServiceAPIDBHostFLASK_APP string
+
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
 
@@ -55,7 +66,6 @@ param staticWebAppName string
 // Add these new parameters
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
-
 
 module appInsights 'modules/app-insights.bicep' = {
   name: 'appInsights'
@@ -107,6 +117,7 @@ module keyVault 'modules/key-vault.bicep' = {
     logAnalytics // Ensure dependency
   ]
 }
+
 module storage 'modules/blob-storage.bicep' = {
   name: 'storage'
   params: {
@@ -157,7 +168,6 @@ module appService 'modules/app-service.bicep' = {
 }
 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
-
 
 module staticWebApp 'modules/static-web-frontend.bicep' = {
   name: 'staticWebApp'
