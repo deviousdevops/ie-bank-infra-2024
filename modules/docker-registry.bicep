@@ -3,6 +3,8 @@ param location string = resourceGroup().location
 param name string
 param sku string
 param workspaceResourceId string
+param githubPrincipalId string = '25d8d697-c4a2-479f-96e0-15593a830ae5'
+param backendAppServicePrincipalId string
 
 // Define the Container Registry resource
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' = {
