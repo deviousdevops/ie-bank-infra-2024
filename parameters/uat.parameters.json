@@ -2,18 +2,23 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        // Environment and Location Configuration
         "environmentType": {
             "value": "nonprod"
         },
         "location": {
             "value": "westeurope"
         },
+
+        // PostgreSQL Configuration
         "postgreSQLServerName": {
             "value": "devious-dbsrv-uat"
         },
         "postgreSQLDatabaseName": {
             "value": "devious-db-uat"
         },
+
+        // App Service Configuration
         "appServicePlanName": {
             "value": "devious-asp-uat"
         },
@@ -23,6 +28,8 @@
         "appServiceAPIAppName": {
             "value": "devious-be-uat"
         },
+
+        // App Service Environment Variables
         "appServiceAPIEnvVarENV": {
             "value": "uat"
         },
@@ -44,6 +51,8 @@
         "appServiceAPIDBHostFLASK_DEBUG": {
             "value": "1"
         },
+
+        // Azure Resource Configuration
         "keyVaultName": {
             "value": "devious-kv-uat"
         },
@@ -62,6 +71,8 @@
         "staticWebAppName": {
             "value": "devious-swa-uat"
         },
+
+        // PostgreSQL Admin Configuration
         "postgreSQLAdminServicePrincipalObjectId": {
             "value": "25d8d697-c4a2-479f-96e0-15593a830ae5"
         },
