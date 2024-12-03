@@ -66,7 +66,6 @@ param staticWebAppName string
 // Add these new parameters
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
-param backendAppServicePrincipalId string
 
 module appInsights 'modules/app-insights.bicep' = {
   name: 'appInsights'
