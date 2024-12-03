@@ -63,3 +63,4 @@ resource acrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
 
 // Output the login server URL for the Container Registry
 output registryLoginServer string = containerRegistry.properties.loginServer
+output registryName string = containerRegistry.name
