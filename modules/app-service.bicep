@@ -8,6 +8,8 @@ param appServiceAPIEnvVarDBNAME string
 @secure()
 param appServiceAPIEnvVarDBPASS string
 param appServiceAPIDBHostDBUSER string
+param appServiceAPIDBHostFLASK_APP string
+param appServiceAPIDBHostFLASK_DEBUG string
 param workspaceResourceId string
 @allowed([
   'nonprod'
