@@ -1,3 +1,4 @@
+@description('Module to deploy App Service and related resources')
 param location string = resourceGroup().location
 param appServicePlanName string = 'devious-asp-uat'
 param appServiceAppName string
@@ -17,14 +18,16 @@ param workspaceResourceId string
 ])
 param environmentType string
 
+// Determine the App Service Plan SKU based on environment type
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
 
+// Define the App Service Plan
 resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   name: appServicePlanName
   location: location
   sku: {
     name: appServicePlanSkuName
-    tier : 'Basic'
+    tier: 'Basic'
   }
   kind: 'linux'
   properties: {
@@ -32,6 +35,7 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   }
 }
 
+// Define the API App Service
 resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAPIAppName
   location: location
@@ -80,7 +84,7 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-// Add diagnostic settings for API App Service
+// Define diagnostic settings for the API App Service
 resource appServiceAPIAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: '${appServiceAPIApp.name}-diagnostic'
   scope: appServiceAPIApp
@@ -121,6 +125,7 @@ resource appServiceAPIAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021
   }
 }
 
+// Define the Frontend App Service
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAppName
   location: location
@@ -137,7 +142,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-// Add diagnostic settings for Frontend App Service
+// Define diagnostic settings for the Frontend App Service
 resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: '${appServiceApp.name}-diagnostic'
   scope: appServiceApp
@@ -178,5 +183,7 @@ resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05
   }
 }
 
+// Output the hostname for the frontend app
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+
 
