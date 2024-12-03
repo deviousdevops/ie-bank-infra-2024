@@ -138,8 +138,3 @@ output postgresqlServerFqdn string = postgresqlServer.properties.fullyQualifiedD
 output databaseName string = databaseName
 output serverId string = postgresqlServer.id
 output serverName string = postgresqlServer.name
-
-output postgresqlServerFqdn string = postgresqlServer.properties.fullyQualifiedDomainName
-output databaseName string = databaseName
-output serverId string = postgresqlServer.id
-output serverName string = postgresqlServer.name
