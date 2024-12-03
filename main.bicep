@@ -66,6 +66,7 @@ param staticWebAppName string
 // Add these new parameters
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
+param backendAppServicePrincipalId string
 
 module appInsights 'modules/app-insights.bicep' = {
   name: 'appInsights'
@@ -95,6 +96,7 @@ module containerRegistry 'modules/docker-registry.bicep' = {
     name: containerRegistryName
     sku: 'Standard'
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
+    backendAppServicePrincipalId: backendAppServicePrincipalId
   }
   dependsOn: [
     logAnalytics
@@ -192,3 +194,4 @@ resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
     category: 'workbook'
   }
 }
+
