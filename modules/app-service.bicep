@@ -1,4 +1,3 @@
-@description('Module to deploy App Service and related resources')
 param location string = resourceGroup().location
 param appServicePlanName string = 'devious-asp-uat'
 param appServiceAppName string
@@ -17,17 +16,20 @@ param workspaceResourceId string
   'prod'
 ])
 param environmentType string
+param dockerRegistryName string = 'deviousacrdev'
 
-// Determine the App Service Plan SKU based on environment type
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
 
-// Define the App Service Plan
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' existing = {
+  name: dockerRegistryName
+}
+
 resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   name: appServicePlanName
   location: location
   sku: {
     name: appServicePlanSkuName
-    tier: 'Basic'
+    tier : 'Basic'
   }
   kind: 'linux'
   properties: {
@@ -35,7 +37,6 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
   }
 }
 
-// Define the API App Service
 resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAPIAppName
   location: location
@@ -46,8 +47,8 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
     serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'PYTHON|3.11'
-      alwaysOn: false
+      linuxFxVersion: 'DOCKER|${dockerRegistryName}.azurecr.io/backend:latest'
+      alwaysOn: true
       ftpsState: 'FtpsOnly'
       appSettings: [
         {
@@ -72,22 +73,42 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'FLASK_APP'
-          value: appServiceAPIDBHostFLASK_APP
+          value: 'iebank_api'
         }
         {
-          name: 'FLASK_DEBUG'
-          value: appServiceAPIDBHostFLASK_DEBUG
+          name: 'FLASK_ENV'
+          value: 'production'
         }
         {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
           value: 'true'
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: 'https://${dockerRegistryName}.azurecr.io'
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_USERNAME'
+          value: dockerRegistryName
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
+          value: containerRegistry.listCredentials().passwords[0].value
+        }
+        {
+          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
+          value: 'false'
+        }
+        {
+          name: 'WEBSITES_PORT'
+          value: '8000'
         }
       ]
     }
   }
 }
 
-// Define diagnostic settings for the API App Service
+// Add diagnostic settings for API App Service
 resource appServiceAPIAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: '${appServiceAPIApp.name}-diagnostic'
   scope: appServiceAPIApp
@@ -128,7 +149,6 @@ resource appServiceAPIAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021
   }
 }
 
-// Define the Frontend App Service
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAppName
   location: location
@@ -145,7 +165,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-// Define diagnostic settings for the Frontend App Service
+// Add diagnostic settings for Frontend App Service
 resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: '${appServiceApp.name}-diagnostic'
   scope: appServiceApp
@@ -186,11 +206,7 @@ resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05
   }
 }
 
-// Output the hostname for the frontend app
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
-output backendPrincipalId string = appServiceAPIApp.identity.principalId
-
-
 
 
 
