@@ -175,5 +175,5 @@ resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
     version: '1.0'
     sourceId: appInsights.outputs.appInsightsId  // Changed from appInsights.id to appInsights.outputs.appInsightsId
     category: 'workbook'
-  }
+  } 
 }
