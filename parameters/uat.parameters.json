@@ -47,9 +47,6 @@
         "keyVaultName": {
             "value": "devious-kv-uat"
         },
-        "storageAccountName": {
-            "value": "deviousstoruat"
-        },
         "containerRegistryName": {
             "value": "deviousacruat"
         },

@@ -44,9 +44,6 @@
         "keyVaultName": {
             "value": "devious-kv8-dev"
         },
-        "storageAccountName": {
-            "value": "deviousstordev"
-        },
         "containerRegistryName": {
             "value": "deviousacrdev"
         },
