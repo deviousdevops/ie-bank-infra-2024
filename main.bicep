@@ -109,14 +109,6 @@ module keyVault 'modules/key-vault.bicep' = {
     logAnalytics // Ensure dependency
   ]
 }
-module storage 'modules/blob-storage.bicep' = {
-  name: 'storage'
-  params: {
-    location: location
-    storageAccountName: storageAccountName
-    environmentType: environmentType
-  }
-}
 
 module postgresql 'modules/postgresql-db.bicep' = {
   name: 'postgresql-deployment'
