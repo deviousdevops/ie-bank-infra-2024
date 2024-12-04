@@ -15,6 +15,8 @@ param workspaceResourceId string
 ])
 param environmentType string
 param dockerRegistryName string = 'deviousacrdev'
+param appServiceAPIDBHostFLASK_APP string
+param appServiceAPIDBHostFLASK_DEBUG string
 
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
 
@@ -71,7 +73,7 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'FLASK_APP'
-          value: 'iebank_api'
+          value: appServiceAPIDBHostFLASK_APP
         }
         {
           name: 'FLASK_ENV'
@@ -100,6 +102,10 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'WEBSITES_PORT'
           value: '8000'
+        }
+        {
+          name: 'FLASK_DEBUG'
+          value: appServiceAPIDBHostFLASK_DEBUG
         }
       ]
     }
@@ -205,6 +211,7 @@ resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05
 }
 
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+
 
 
 
