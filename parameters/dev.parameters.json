@@ -42,7 +42,7 @@
             "value": "1"
         },
         "keyVaultName": {
-            "value": "devious-kv2-dev"
+            "value": "devious-kv8-dev"
         },
         "storageAccountName": {
             "value": "deviousstordev"
