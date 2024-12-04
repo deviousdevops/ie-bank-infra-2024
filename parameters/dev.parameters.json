@@ -2,23 +2,18 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        // Environment and Location Configuration
         "environmentType": {
             "value": "nonprod"
         },
         "location": {
             "value": "westeurope"
         },
-
-        // PostgreSQL Configuration
         "postgreSQLServerName": {
             "value": "devious-dbsrv-dev"
         },
         "postgreSQLDatabaseName": {
             "value": "devious-db-dev"
         },
-        
-        // App Service Configuration
         "appServicePlanName": {
             "value": "devious-asp-dev"
         },
@@ -28,8 +23,6 @@
         "appServiceAPIAppName": {
             "value": "devious-be-dev"
         },
-
-        // App Service Environment Variables
         "appServiceAPIEnvVarENV": {
             "value": "development"
         },
@@ -43,15 +36,13 @@
             "value": "iebankdbadmin"
         },
         "appServiceAPIDBHostFLASK_APP": {
-            "value": "app:app"
+            "value": "iebank_api"
         },
         "appServiceAPIDBHostFLASK_DEBUG": {
             "value": "1"
         },
-
-        // Azure Resource Configuration
         "keyVaultName": {
-            "value": "devious-kv4-dev"
+            "value": "devious-kv6-dev"
         },
         "storageAccountName": {
             "value": "deviousstordev"
@@ -68,8 +59,6 @@
         "staticWebAppName": {
             "value": "devious-swa-dev"
         },
-
-        // PostgreSQL Admin Configuration
         "postgreSQLAdminServicePrincipalObjectId": {
             "value": "25d8d697-c4a2-479f-96e0-15593a830ae5"
         },
