@@ -1,4 +1,3 @@
-@description('Module to deploy a Container Registry and configure diagnostics')
 param location string = resourceGroup().location
 param name string
 param sku string
@@ -6,7 +5,6 @@ param workspaceResourceId string
 param githubPrincipalId string = '25d8d697-c4a2-479f-96e0-15593a830ae5'
 param backendAppServicePrincipalId string
 
-// Define the Container Registry resource
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-preview' = {
   name: name
   location: location
@@ -17,8 +15,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-12-01-pr
     adminUserEnabled: true
   }
 }
-
-// Define the diagnostic settings for the Container Registry
 resource containerRegistryDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: '${containerRegistry.name}-diagnostic'
   scope: containerRegistry
@@ -62,6 +58,9 @@ resource acrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
     principalType: 'ServicePrincipal'
   }
 }
+
+output registryLoginServer string = containerRegistry.properties.loginServer
+output registryName string = containerRegistry.name
 
 // Output the login server URL for the Container Registry
 output registryLoginServer string = containerRegistry.properties.loginServer
