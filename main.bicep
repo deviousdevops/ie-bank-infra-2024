@@ -46,7 +46,6 @@ param appServiceAPIDBHostFLASK_DEBUG string
 
 // Add new parameters needed for other resources
 param keyVaultName string
-param storageAccountName string
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
@@ -148,7 +147,7 @@ module appService 'modules/app-service.bicep' = {
   dependsOn: [
     postgresql
     keyVault
-    storage
+
     logAnalytics
   ]
 }
@@ -165,7 +164,6 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
   }
 }
 
-output storageAccountConnectionString string = storage.outputs.storageAccountConnectionString
 
 resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
   name: guid('Devious-SLO-Monitoring')
