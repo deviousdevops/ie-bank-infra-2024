@@ -73,7 +73,11 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'FLASK_APP'
-          value: 'iebank_api'
+          value: appServiceAPIDBHostFLASK_APP
+        }
+        {
+          name: 'FLASK_DEBUG'
+          value: appServiceAPIDBHostFLASK_DEBUG
         }
         {
           name: 'FLASK_ENV'

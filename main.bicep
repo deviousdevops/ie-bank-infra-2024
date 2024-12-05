@@ -40,7 +40,7 @@ param appServiceAPIEnvVarDBPASS string
 @sys.description('The value for the environment variable DBUSER')
 param appServiceAPIDBHostDBUSER string
 @sys.description('The value for the environment variable FLASK_APP')
-param appServiceAPIDBHostFLASK_APP string
+param appServiceAPIDBHostFLASK_APP string = 'iebank_api'
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
 
