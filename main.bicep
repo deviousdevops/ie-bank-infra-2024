@@ -5,7 +5,7 @@
 ])
 param environmentType string 
 @sys.description('The user alias to add to the deployment name')
-param userAlias string 
+param userAlias string = 'deviousinc'
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
