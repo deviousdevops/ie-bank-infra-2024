@@ -53,6 +53,8 @@ param logAnalyticsWorkspaceName string
 param staticWebAppName string
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
+param githubActionsPrincipalId string
+
 
 
 module appInsights 'modules/app-insights.bicep' = {
