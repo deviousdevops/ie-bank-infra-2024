@@ -3,29 +3,29 @@
   'nonprod'
   'prod'
 ])
-param environmentType string = 'nonprod'
+param environmentType string 
 @sys.description('The user alias to add to the deployment name')
-param userAlias string = 'deviousinc'
+param userAlias string 
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
-param postgreSQLServerName string = 'ie-bank-db-server-dev'
+param postgreSQLServerName string 
 @sys.description('The PostgreSQL Database name')
 @minLength(3)
 @maxLength(24)
-param postgreSQLDatabaseName string = 'ie-bank-db'
+param postgreSQLDatabaseName string 
 @sys.description('The App Service Plan name')
 @minLength(3)
 @maxLength(24)
-param appServicePlanName string = 'ie-bank-app-sp-dev'
+param appServicePlanName string 
 @sys.description('The Web App name (frontend)')
 @minLength(3)
 @maxLength(24)
-param appServiceAppName string = 'ie-bank-dev'
+param appServiceAppName string 
 @sys.description('The API App name (backend)')
 @minLength(3)
 @maxLength(24)
-param appServiceAPIAppName string = 'ie-bank-api-dev'
+param appServiceAPIAppName string 
 @sys.description('The Azure location where the resources will be deployed')
 param location string = resourceGroup().location
 @sys.description('The value for the environment variable ENV')
@@ -40,7 +40,7 @@ param appServiceAPIEnvVarDBPASS string
 @sys.description('The value for the environment variable DBUSER')
 param appServiceAPIDBHostDBUSER string
 @sys.description('The value for the environment variable FLASK_APP')
-param appServiceAPIDBHostFLASK_APP string = 'iebank_api'
+param appServiceAPIDBHostFLASK_APP string
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
 
