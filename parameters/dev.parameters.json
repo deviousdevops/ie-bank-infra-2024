@@ -57,10 +57,28 @@
             "value": "devious-swa-dev"
         },
         "postgreSQLAdminServicePrincipalObjectId": {
-            "value": "25d8d697-c4a2-479f-96e0-15593a830ae5"
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/${subscription-id}/resourceGroups/${resource-group}/providers/Microsoft.KeyVault/vaults/${keyvault-name}"
+                },
+                "secretName": "postgresql-admin-sp-object-id"
+            }
         },
         "postgreSQLAdminServicePrincipalName": {
-            "value": "sp-postgresql-admin"
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/${subscription-id}/resourceGroups/${resource-group}/providers/Microsoft.KeyVault/vaults/${keyvault-name}"
+                },
+                "secretName": "postgresql-admin-sp-name"
+            }
+        },
+        "githubActionsPrincipalId": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/${subscription-id}/resourceGroups/${resource-group}/providers/Microsoft.KeyVault/vaults/${keyvault-name}"
+                },
+                "secretName": "github-actions-principal-id"
+            }
         },
         "appServiceAPISecretKey": {
             "value": "secret"
