@@ -64,6 +64,9 @@
         },
         "postgreSQLAdminServicePrincipalName": {
             "value": "sp-postgresql-admin"
+        },
+        "appServiceAPISecretKey": {
+            "value": "secret"
         }
     }
 }
