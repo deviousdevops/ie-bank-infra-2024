@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environmentType": {
+            "value": "prod"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "postgreSQLServerName": {
+            "value": "devious-dbsrv-prod"
+        },
+        "postgreSQLDatabaseName": {
+            "value": "devious-db-prod"
+        },
+        "appServicePlanName": {
+            "value": "devious-asp-prod"
+        },
+        "appServiceAppName": {
+            "value": "devious-fe-prod"
+        },
+        "appServiceAPIAppName": {
+            "value": "devious-be-prod"
+        },
+        "appServiceAPIEnvVarENV": {
+            "value": "prod"
+        },
+        "appServiceAPIEnvVarDBHOST": {
+            "value": "devious-dbsrv-prod.postgres.database.azure.com"
+        },
+        "appServiceAPIEnvVarDBNAME": {
+            "value": "devious-db-prod"
+        },
+        "appServiceAPIEnvVarDBPASS": {
+            "value": "IE.Bank.DB.Admin.Pa$$"
+        },
+        "appServiceAPIDBHostDBUSER": {
+            "value": "iebankadmin"
+        },
+        "appServiceAPIDBHostFLASK_APP": {
+            "value": "iebank_api"
+        },
+        "appServiceAPIDBHostFLASK_DEBUG": {
+            "value": "1"
+        },
+        "keyVaultName": {
+            "value": "devious-kv20-prod"
+        },
+        "containerRegistryName": {
+            "value": "deviousacrprod"
+        },
+        "applicationInsightsName": {
+            "value": "devious-ai-prod"
+        },
+        "logAnalyticsWorkspaceName": {
+            "value": "devious-law-prod"
+        },
+        "staticWebAppName": {
+            "value": "devious-swa-prod"
+        },
+        "postgreSQLAdminServicePrincipalObjectId": {
+            "value": "25d8d697-c4a2-479f-96e0-15593a830ae5"
+        },
+        "postgreSQLAdminServicePrincipalName": {
+            "value": "sp-postgresql-admin"
+        }
+    }
+}
