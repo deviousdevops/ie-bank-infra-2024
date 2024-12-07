@@ -33,7 +33,7 @@
             "value": "devious-db-dev"
         },
         "appServiceAPIDBHostDBUSER": {
-            "value": "iebankdbadmin"
+            "value": "iebankadmin"
         },
         "appServiceAPIDBHostFLASK_APP": {
             "value": "iebank_api"
