@@ -36,7 +36,7 @@
             "value": "IE.Bank.DB.Admin.Pa$$"
         },
         "appServiceAPIDBHostDBUSER": {
-            "value": "iebankdbadmin"
+            "value": "iebankadmin"
         },
         "appServiceAPIDBHostFLASK_APP": {
             "value": "iebank_api"
@@ -45,7 +45,7 @@
             "value": "1"
         },
         "keyVaultName": {
-            "value": "devious-kv9-uat"
+            "value": "devious-kv20-uat"
         },
         "containerRegistryName": {
             "value": "deviousacruat"
