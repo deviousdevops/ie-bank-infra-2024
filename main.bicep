@@ -141,6 +141,8 @@ module appService 'modules/app-service.bicep' = {
     appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
     dockerRegistryName: containerRegistryName
+    appServiceAPISecretKey: appServiceAPISecretKey
+
   }
   dependsOn: [
     postgresql
