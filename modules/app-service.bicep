@@ -12,7 +12,8 @@ param appServiceAPIDBHostFLASK_APP string
 param appServiceAPIDBHostFLASK_DEBUG string
 param workspaceResourceId string
 @allowed([
-  'nonprod'
+  'dev'
+  'uat'
   'prod'
 ])
 param environmentType string
