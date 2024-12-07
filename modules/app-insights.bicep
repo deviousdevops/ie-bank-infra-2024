@@ -7,9 +7,9 @@ param name string =
 ])
 param applicationType string = 'web'
 @allowed([
-  'nonprod'
-  'prod'
+  'dev'
   'uat'
+  'prod'
 ])
 param environmentType string = 
 
