@@ -1,31 +1,32 @@
 @sys.description('The environment type (nonprod or prod)')
 @allowed([
-  'nonprod'
+  'dev'
+  'uat'
   'prod'
 ])
-param environmentType string = 'nonprod'
+param environmentType string 
 @sys.description('The user alias to add to the deployment name')
 param userAlias string = 'deviousinc'
 @sys.description('The PostgreSQL Server name')
 @minLength(3)
 @maxLength(24)
-param postgreSQLServerName string = 'ie-bank-db-server-dev'
+param postgreSQLServerName string 
 @sys.description('The PostgreSQL Database name')
 @minLength(3)
 @maxLength(24)
-param postgreSQLDatabaseName string = 'ie-bank-db'
+param postgreSQLDatabaseName string 
 @sys.description('The App Service Plan name')
 @minLength(3)
 @maxLength(24)
-param appServicePlanName string = 'ie-bank-app-sp-dev'
+param appServicePlanName string 
 @sys.description('The Web App name (frontend)')
 @minLength(3)
 @maxLength(24)
-param appServiceAppName string = 'ie-bank-dev'
+param appServiceAppName string 
 @sys.description('The API App name (backend)')
 @minLength(3)
 @maxLength(24)
-param appServiceAPIAppName string = 'ie-bank-api-dev'
+param appServiceAPIAppName string 
 @sys.description('The Azure location where the resources will be deployed')
 param location string = resourceGroup().location
 @sys.description('The value for the environment variable ENV')
@@ -40,20 +41,20 @@ param appServiceAPIEnvVarDBPASS string
 @sys.description('The value for the environment variable DBUSER')
 param appServiceAPIDBHostDBUSER string
 @sys.description('The value for the environment variable FLASK_APP')
-param appServiceAPIDBHostFLASK_APP string = 'iebank_api'
+param appServiceAPIDBHostFLASK_APP string
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
-
-// Add new parameters needed for other resources
+@secure()
+param appServiceAPISecretKey string
 param keyVaultName string
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
 param staticWebAppName string
-
-// Add these new parameters
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
+param githubActionsPrincipalId string
+
 
 
 module appInsights 'modules/app-insights.bicep' = {
@@ -84,8 +85,8 @@ module containerRegistry 'modules/docker-registry.bicep' = {
     name: containerRegistryName
     sku: 'Standard'
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
-    githubPrincipalId: '25d8d697-c4a2-479f-96e0-15593a830ae5'
-    backendAppServicePrincipalId: '25d8d697-c4a2-479f-96e0-15593a830ae5'
+    githubActionsPrincipalId: githubActionsPrincipalId
+    backendAppServicePrincipalId: githubActionsPrincipalId
   }
   dependsOn: [
     logAnalytics
@@ -100,12 +101,12 @@ module keyVault 'modules/key-vault.bicep' = {
     adminPassword: appServiceAPIEnvVarDBPASS
     registryName: containerRegistryName
     objectId: subscription().subscriptionId
-    githubActionsPrincipalId: '25d8d697-c4a2-479f-96e0-15593a830ae5'
-    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Added line
+    githubActionsPrincipalId: githubActionsPrincipalId
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
     containerRegistry
-    logAnalytics // Ensure dependency
+    logAnalytics 
   ]
 }
 
@@ -118,8 +119,8 @@ module postgresql 'modules/postgresql-db.bicep' = {
     postgreSQLAdminServicePrincipalObjectId: postgreSQLAdminServicePrincipalObjectId
     postgreSQLAdminServicePrincipalName: postgreSQLAdminServicePrincipalName
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
-    administratorLogin: 'iebankdbadmin'
-    administratorLoginPassword: 'IE.Bank.DB.Admin.Pa$$'
+    administratorLogin: appServiceAPIDBHostDBUSER
+    administratorLoginPassword: appServiceAPIEnvVarDBPASS
   }
   dependsOn: [
     logAnalytics
@@ -143,6 +144,8 @@ module appService 'modules/app-service.bicep' = {
     appServiceAPIEnvVarENV: appServiceAPIEnvVarENV
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
     dockerRegistryName: containerRegistryName
+    appServiceAPISecretKey: appServiceAPISecretKey
+
   }
   dependsOn: [
     postgresql

@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
-param appServicePlanName string = 'devious-asp-uat'
+param appServicePlanName string 
 param appServiceAppName string
-param appServiceAPIAppName string = 'devious-be-uat'
+param appServiceAPIAppName string 
 param appServiceAPIEnvVarENV string
 param appServiceAPIEnvVarDBHOST string
 param appServiceAPIEnvVarDBNAME string
@@ -12,11 +12,14 @@ param appServiceAPIDBHostFLASK_APP string
 param appServiceAPIDBHostFLASK_DEBUG string
 param workspaceResourceId string
 @allowed([
-  'nonprod'
+  'dev'
+  'uat'
   'prod'
 ])
 param environmentType string
-param dockerRegistryName string = 'deviousacrdev'
+param dockerRegistryName string 
+@secure()
+param appServiceAPISecretKey string
 
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
 
@@ -106,6 +109,10 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'WEBSITES_PORT'
           value: '8000'
+        }
+        {
+          name: 'SECRET_KEY'
+          value: appServiceAPISecretKey
         }
       ]
     }

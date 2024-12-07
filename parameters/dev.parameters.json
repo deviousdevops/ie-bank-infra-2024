@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "environmentType": {
-            "value": "nonprod"
+            "value": "dev"
         },
         "location": {
             "value": "westeurope"
@@ -42,7 +42,7 @@
             "value": "1"
         },
         "keyVaultName": {
-            "value": "devious-kv10-dev"
+            "value": "devious-kv25-dev"
         },
         "containerRegistryName": {
             "value": "deviousacrdev"
@@ -61,6 +61,12 @@
         },
         "postgreSQLAdminServicePrincipalName": {
             "value": "sp-postgresql-admin"
+        },
+        "githubActionsPrincipalId":{
+            "value" : "25d8d697-c4a2-479f-96e0-15593a830ae5"
+        },
+        "appServiceAPISecretKey": {
+            "value": "secret"
         }
     }
 }

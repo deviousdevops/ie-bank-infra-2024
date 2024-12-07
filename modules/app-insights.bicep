@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-param name string = 'devious-ai-uat'
+param name string
 
 @allowed([
   'web'
@@ -7,11 +7,11 @@ param name string = 'devious-ai-uat'
 ])
 param applicationType string = 'web'
 @allowed([
-  'nonprod'
-  'prod'
+  'dev'
   'uat'
+  'prod'
 ])
-param environmentType string = 'uat'
+param environmentType string 
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: name
