@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-param name string  
+param name string
 
 @allowed([
   'web'
@@ -11,7 +11,7 @@ param applicationType string = 'web'
   'uat'
   'prod'
 ])
-param environmentType string = 
+param environmentType string 
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: name
