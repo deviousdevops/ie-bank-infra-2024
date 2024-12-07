@@ -118,8 +118,8 @@ module postgresql 'modules/postgresql-db.bicep' = {
     postgreSQLAdminServicePrincipalObjectId: postgreSQLAdminServicePrincipalObjectId
     postgreSQLAdminServicePrincipalName: postgreSQLAdminServicePrincipalName
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
-    administratorLogin: 'iebankdbadmin'
-    administratorLoginPassword: 'IE.Bank.DB.Admin.Pa$$'
+    administratorLogin: appServiceAPIDBHostDBUSER
+    administratorLoginPassword: appServiceAPIEnvVarDBPASS
   }
   dependsOn: [
     logAnalytics
