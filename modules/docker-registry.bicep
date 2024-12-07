@@ -1,4 +1,4 @@
-param location string = resourceGroup().location
+param location string 
 param name string
 param sku string
 param workspaceResourceId string
