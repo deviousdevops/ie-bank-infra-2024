@@ -1,6 +1,6 @@
-param location string = resourceGroup().location
+param location string
 param name string
-@allowed(['nonprod', 'prod'])
+@allowed(['dev', 'uat', 'prod'])
 param environmentType string
 param sku string = (environmentType == 'prod') ? 'Standard' : 'Free'
 
