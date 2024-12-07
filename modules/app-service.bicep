@@ -109,6 +109,10 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
           name: 'WEBSITES_PORT'
           value: '8000'
         }
+        {
+          name: 'SECRET_KEY'
+          value: appServiceAPISecretKey
+        }
       ]
     }
   }
