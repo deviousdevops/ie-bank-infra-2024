@@ -85,7 +85,7 @@ module containerRegistry 'modules/docker-registry.bicep' = {
     name: containerRegistryName
     sku: 'Standard'
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
-    githubPrincipalId: githubActionsPrincipalId
+    githubActionsPrincipalId: githubActionsPrincipalId
     backendAppServicePrincipalId: githubActionsPrincipalId
   }
   dependsOn: [
@@ -101,7 +101,7 @@ module keyVault 'modules/key-vault.bicep' = {
     adminPassword: appServiceAPIEnvVarDBPASS
     registryName: containerRegistryName
     objectId: subscription().subscriptionId
-    githubPrincipalId: githubActionsPrincipalId
+    githubActionsPrincipalId: githubActionsPrincipalId
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
