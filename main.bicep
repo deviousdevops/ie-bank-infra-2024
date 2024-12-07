@@ -43,15 +43,13 @@ param appServiceAPIDBHostDBUSER string
 param appServiceAPIDBHostFLASK_APP string
 @sys.description('The value for the environment variable FLASK_DEBUG')
 param appServiceAPIDBHostFLASK_DEBUG string
-
-// Add new parameters needed for other resources
+@secure()
+param appServiceAPISecretKey string
 param keyVaultName string
 param containerRegistryName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
 param staticWebAppName string
-
-// Add these new parameters
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
 
