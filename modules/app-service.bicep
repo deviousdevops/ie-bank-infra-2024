@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
-param appServicePlanName string = 'devious-asp-uat'
+param appServicePlanName string 
 param appServiceAppName string
-param appServiceAPIAppName string = 'devious-be-uat'
+param appServiceAPIAppName string 
 param appServiceAPIEnvVarENV string
 param appServiceAPIEnvVarDBHOST string
 param appServiceAPIEnvVarDBNAME string
@@ -16,7 +16,9 @@ param workspaceResourceId string
   'prod'
 ])
 param environmentType string
-param dockerRegistryName string = 'deviousacrdev'
+param dockerRegistryName string 
+@secure()
+param appServiceAPISecretKey string
 
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
 
