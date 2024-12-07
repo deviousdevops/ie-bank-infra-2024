@@ -14,6 +14,7 @@ on:
 env:
   RESOURCE_GROUP_UAT: BCSAI2024-DEVOPS-STUDENTS-A-UAT
   RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-A-DEV
+  RESOURCE_GROUP_PROD: BCSAI2024-DEVOPS-STUDENTS-A-PROD
   SUBSCRIPTION_ID: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
   USER_ALIAS: deviousinc
 
@@ -93,3 +94,30 @@ jobs:
           template: ./main.bicep
           parameters: ./parameters/uat.parameters.json appServiceAPIEnvVarENV=${{ vars.ENV }} appServiceAPIEnvVarDBHOST=${{ vars.DBHOST }} appServiceAPIEnvVarDBNAME=${{ vars.DBNAME }} appServiceAPIEnvVarDBPASS=${{ secrets.DBPASS }} appServiceAPIDBHostDBUSER=${{ secrets.DBUSER }} appServiceAPIDBHostFLASK_APP=${{ vars.FLASK_APP }} appServiceAPIDBHostFLASK_DEBUG=${{ vars.FLASK_DEBUG }}
           deploymentName: ${{ env.USER_ALIAS }}-uat
+          
+  deploy-prod:
+      if: github.event.pull_request.base.ref == 'main' || github.event_name == 'workflow_dispatch'
+      runs-on: ubuntu-latest
+      needs: build
+      environment:
+        name: 'Prod'
+  
+      steps:
+        - uses: actions/checkout@main
+        - name: Download Bicep build artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: bicep-build
+  
+        - uses: azure/login@v2
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+  
+        - name: Deploy to prod
+          uses: azure/arm-deploy@v2
+          with:
+            subscriptionId: ${{ env.SUBSCRIPTION_ID }}
+            resourceGroupName: ${{ env.RESOURCE_GROUP_PROD }}
+            template: ./main.bicep
+            parameters: ./parameters/prod.parameters.json appServiceAPIEnvVarENV=${{ vars.ENV }} appServiceAPIEnvVarDBHOST=${{ vars.DBHOST }} appServiceAPIEnvVarDBNAME=${{ vars.DBNAME }} appServiceAPIEnvVarDBPASS=${{ secrets.DBPASS }} appServiceAPIDBHostDBUSER=${{ secrets.DBUSER }} appServiceAPIDBHostFLASK_APP=${{ vars.FLASK_APP }} appServiceAPIDBHostFLASK_DEBUG=${{ vars.FLASK_DEBUG }}
+            deploymentName: ${{ env.USER_ALIAS }}-prod
