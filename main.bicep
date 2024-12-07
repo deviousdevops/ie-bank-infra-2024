@@ -1,6 +1,7 @@
 @sys.description('The environment type (nonprod or prod)')
 @allowed([
-  'nonprod'
+  'dev'
+  'uat'
   'prod'
 ])
 param environmentType string 
@@ -99,7 +100,7 @@ module keyVault 'modules/key-vault.bicep' = {
     registryName: containerRegistryName
     objectId: subscription().subscriptionId
     githubActionsPrincipalId: '25d8d697-c4a2-479f-96e0-15593a830ae5'
-    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId // Added line
+    workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
   dependsOn: [
     containerRegistry
