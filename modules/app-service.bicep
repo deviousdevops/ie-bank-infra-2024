@@ -23,10 +23,7 @@ param appServiceAPISecretKey string
 @secure()
 param appInsightsConnectionString string
 param appInsightsInstrumentationKey string
-@secure()
-  { name: 'APPINSIGHTS_INSTRUMENTATIONKEY', value: appInsightsInstrumentationKey }
-  { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
-  { name: 'ApplicationInsightsAgent_EXTENSION_VERSION', value: '~3' }
+
 
 
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
