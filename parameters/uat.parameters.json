@@ -45,7 +45,7 @@
             "value": "1"
         },
         "keyVaultName": {
-            "value": "devious-kV-uat"
+            "value": "devious-kV1-uat"
         },
         "containerRegistryName": {
             "value": "deviousacruat"
