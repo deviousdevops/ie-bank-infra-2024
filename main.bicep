@@ -54,6 +54,9 @@ param staticWebAppName string
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
 param githubActionsPrincipalId string
+@secure()
+param slackWebhookUrl string
+param logicAppName string
 
 
 
@@ -182,5 +185,29 @@ resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
   dependsOn: [
     appInsights
     logAnalytics
+  ]
+}
+
+module logicApp 'modules/logic-app.bicep' = {
+  name: 'logicApp'
+  params: {
+    location: location
+    name: logicAppName
+    slackWebhookUrl: slackWebhookUrl
+  }
+}
+
+module alerts 'modules/alerts.bicep' = {
+  name: 'alerts'
+  params: {
+    appInsightsId: appInsights.outputs.appInsightsId
+    appServicePlanId: appService.outputs.appServicePlanId
+    webAppId: appService.outputs.webAppId
+    logicAppEndpoint: logicApp.outputs.logicAppEndpoint
+  }
+  dependsOn: [
+    logicApp
+    appInsights
+    appService
   ]
 }

@@ -218,3 +218,5 @@ resource appServiceAppDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05
 }
 
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+output appServicePlanId string = appServicePlan.id
+output webAppId string = appServiceAPIApp.id
