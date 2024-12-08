@@ -167,9 +167,12 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
     location: location
     name: staticWebAppName
     environmentType: environmentType
+    keyVaultName: keyVaultName
   }
+  dependsOn: [
+    keyVault
+  ]
 }
-
 
 resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
   name: guid('devious-workbook')
