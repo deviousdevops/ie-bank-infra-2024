@@ -22,6 +22,12 @@ param dockerRegistryName string
 param appServiceAPISecretKey string
 @secure()
 param appInsightsConnectionString string
+param instrumentationKey string
+@secure()
+  { name: 'APPINSIGHTS_INSTRUMENTATIONKEY', value: instrumentationKey }
+  { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
+  { name: 'ApplicationInsightsAgent_EXTENSION_VERSION', value: '~3' }
+
 
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
 
