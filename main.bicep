@@ -151,6 +151,8 @@ module appService 'modules/app-service.bicep' = {
     dockerRegistryName: containerRegistryName
     appServiceAPISecretKey: appServiceAPISecretKey
     appInsightsConnectionString: appInsightsConnectionString
+    instrumentationKey: appInsights.outputs.instrumentationKey
+
 
   }
   dependsOn: [
