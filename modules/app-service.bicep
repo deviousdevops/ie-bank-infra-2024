@@ -22,9 +22,9 @@ param dockerRegistryName string
 param appServiceAPISecretKey string
 @secure()
 param appInsightsConnectionString string
-param instrumentationKey string
+param appInsightsInstrumentationKey string
 @secure()
-  { name: 'APPINSIGHTS_INSTRUMENTATIONKEY', value: instrumentationKey }
+  { name: 'APPINSIGHTS_INSTRUMENTATIONKEY', value: appInsightsInstrumentationKey }
   { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
   { name: 'ApplicationInsightsAgent_EXTENSION_VERSION', value: '~3' }
 
