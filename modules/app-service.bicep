@@ -127,6 +127,10 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
           value: appInsightsConnectionString
         }
         {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appInsightsInstrumentationKey
+        }
+        {
           name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
           value: '~3'
         }
