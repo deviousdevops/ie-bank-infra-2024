@@ -54,6 +54,9 @@ param staticWebAppName string
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
 param githubActionsPrincipalId string
+@secure()
+param slackWebhookUrl string
+param logicAppName string
 
 
 
@@ -169,14 +172,42 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
 
 
 resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
-  name: guid('Devious-SLO-Monitoring')
+  name: guid('devious-workbook')
   location: location
   kind: 'shared'
   properties: {
-    displayName: 'IE Bank SLO Dashboard'
-    serializedData: '{"version":"Notebook/1.0","items":[],"isLocked":false}'  // Basic empty workbook
+    displayName: 'Devious Bank Workbook'
+    serializedData: loadTextContent('workbooks/workbook.json')
     version: '1.0'
-    sourceId: appInsights.outputs.appInsightsId  // Changed from appInsights.id to appInsights.outputs.appInsightsId
+    sourceId: appInsights.outputs.appInsightsId
     category: 'workbook'
   }
+  dependsOn: [
+    appInsights
+    logAnalytics
+  ]
+}
+
+module logicApp 'modules/logic-app.bicep' = {
+  name: 'logicApp'
+  params: {
+    location: location
+    name: logicAppName
+    slackWebhookUrl: slackWebhookUrl
+  }
+}
+
+module alerts 'modules/alerts.bicep' = {
+  name: 'alerts'
+  params: {
+    appInsightsId: appInsights.outputs.appInsightsId
+    appServicePlanId: appService.outputs.appServicePlanId
+    webAppId: appService.outputs.webAppId
+    logicAppId: logicApp.outputs.logicAppId
+  }
+  dependsOn: [
+    logicApp
+    appInsights
+    appService
+  ]
 }

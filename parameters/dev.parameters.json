@@ -67,6 +67,9 @@
         },
         "appServiceAPISecretKey": {
             "value": "secret"
+        },
+        "logicAppName": {
+            "value": "devious-logic-app-dev"
         }
     }
 }
