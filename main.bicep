@@ -59,7 +59,7 @@ param slackWebhookUrl string
 param logicAppName string
 @secure()
 param appInsightsConnectionString string
-
+param appInsightsInstrumentationKey string
 
 
 module appInsights 'modules/app-insights.bicep' = {
@@ -151,7 +151,7 @@ module appService 'modules/app-service.bicep' = {
     dockerRegistryName: containerRegistryName
     appServiceAPISecretKey: appServiceAPISecretKey
     appInsightsConnectionString: appInsightsConnectionString
-    instrumentationKey: appInsights.outputs.instrumentationKey
+    appInsightsInstrumentationKey: appInsights.outputs.appInsightsInstrumentationKey
 
 
   }
