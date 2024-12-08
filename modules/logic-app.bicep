@@ -40,7 +40,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
         }
       }
       actions: {
-        'Post_message_to_Slack': {
+        Post_message_to_Slack: {
           type: 'Http'
           inputs: {
             method: 'POST'
