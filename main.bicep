@@ -54,7 +54,6 @@ param staticWebAppName string
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
 param githubActionsPrincipalId string
-param workspaceId string
 
 
 
