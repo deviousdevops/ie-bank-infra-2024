@@ -73,6 +73,12 @@
         },
         "logicAppName": {
             "value": "devious-logic-app-uat"
+        },
+        "appInsightsConnectionString": {
+            "value": ""
+        },
+        "appInsightsInstrumentationKey": {
+            "value": ""
         }
     }
 }
