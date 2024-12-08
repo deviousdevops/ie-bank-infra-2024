@@ -69,9 +69,6 @@ module appInsights 'modules/app-insights.bicep' = {
     name: applicationInsightsName
     environmentType: environmentType
   }
-  dependsOn: [
-    appService
-  ]
 }
 
 module logAnalytics 'modules/log-analytics.bicep' = {
@@ -151,14 +148,12 @@ module appService 'modules/app-service.bicep' = {
     dockerRegistryName: containerRegistryName
     appServiceAPISecretKey: appServiceAPISecretKey
     appInsightsConnectionString: appInsightsConnectionString
-    appInsightsInstrumentationKey: appInsights.outputs.appInsightsInstrumentationKey
-
-
+    appInsightsInstrumentationKey: appInsightsInstrumentationKey
   }
   dependsOn: [
+    appInsights
     postgresql
     keyVault
-
     logAnalytics
   ]
 }
@@ -216,3 +211,4 @@ module alerts 'modules/alerts.bicep' = {
     appService
   ]
 }
+
