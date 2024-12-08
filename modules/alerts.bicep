@@ -1,6 +1,4 @@
 param logicAppId string
-@secure()
-param logicAppCallbackUrl string
 param appInsightsId string
 param appServicePlanId string
 param webAppId string
@@ -16,7 +14,7 @@ resource actionGroup 'Microsoft.Insights/actionGroups@2019-06-01' = {
       {
         name: 'SlackWebhook'
         resourceId: logicAppId
-        callbackUrl: logicAppCallbackUrl
+        callbackUrl: reference(logicAppId, '2019-05-01').accessEndpoint
       }
     ]
   }
