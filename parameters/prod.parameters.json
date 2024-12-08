@@ -45,7 +45,7 @@
             "value": "1"
         },
         "keyVaultName": {
-            "value": "devious-kv20-prod"
+            "value": "devious-kv28-prod"
         },
         "containerRegistryName": {
             "value": "deviousacrprod"
