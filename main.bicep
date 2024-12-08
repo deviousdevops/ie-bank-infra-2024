@@ -57,6 +57,8 @@ param githubActionsPrincipalId string
 @secure()
 param slackWebhookUrl string
 param logicAppName string
+@secure()
+param appInsightsConnectionString string
 
 
 
@@ -148,6 +150,7 @@ module appService 'modules/app-service.bicep' = {
     workspaceResourceId: logAnalytics.outputs.logAnalyticsWorkspaceId
     dockerRegistryName: containerRegistryName
     appServiceAPISecretKey: appServiceAPISecretKey
+    appInsightsConnectionString: appInsightsConnectionString
 
   }
   dependsOn: [
