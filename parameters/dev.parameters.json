@@ -42,7 +42,7 @@
             "value": "1"
         },
         "keyVaultName": {
-            "value": "devious-kv29-dev"
+            "value": "devious-kv30-dev"
         },
         "containerRegistryName": {
             "value": "deviousacrdev"
