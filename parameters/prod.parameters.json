@@ -73,6 +73,12 @@
         },
         "logicAppName": {
             "value": "devious-logic-app-prod"
+        },
+        "appInsightsConnectionString": {
+            "value": ""
+        },
+        "appInsightsInstrumentationKey": {
+            "value": ""
         }
     }
 }
