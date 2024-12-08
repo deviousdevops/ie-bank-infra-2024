@@ -1,4 +1,4 @@
-param logicAppEndpoint string
+param logicAppId string
 param appInsightsId string
 param appServicePlanId string
 param webAppId string
@@ -10,11 +10,11 @@ resource actionGroup 'Microsoft.Insights/actionGroups@2019-06-01' = {
   properties: {
     groupShortName: 'SlackAlert'
     enabled: true
-    webhookReceivers: [
+    logicAppReceivers: [
       {
         name: 'SlackWebhook'
-        serviceUri: logicAppEndpoint
-        useCommonAlertSchema: true
+        resourceId: logicAppId
+        callbackUrl: ''
       }
     ]
   }

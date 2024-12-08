@@ -203,7 +203,7 @@ module alerts 'modules/alerts.bicep' = {
     appInsightsId: appInsights.outputs.appInsightsId
     appServicePlanId: appService.outputs.appServicePlanId
     webAppId: appService.outputs.webAppId
-    logicAppEndpoint: logicApp.outputs.logicAppEndpoint
+    logicAppId: logicApp.outputs.logicAppId
   }
   dependsOn: [
     logicApp
