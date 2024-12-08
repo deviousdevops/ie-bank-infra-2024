@@ -56,3 +56,4 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
 }
 
 output logicAppId string = logicApp.id
+output logicAppCallbackUrl string = listCallbackUrl('${logicApp.id}/triggers/manual', logicApp.apiVersion).value

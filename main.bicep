@@ -204,6 +204,7 @@ module alerts 'modules/alerts.bicep' = {
     appServicePlanId: appService.outputs.appServicePlanId
     webAppId: appService.outputs.webAppId
     logicAppId: logicApp.outputs.logicAppId
+    logicAppCallbackUrl: logicApp.outputs.logicAppCallbackUrl
   }
   dependsOn: [
     logicApp
