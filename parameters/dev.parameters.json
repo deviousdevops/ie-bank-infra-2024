@@ -70,6 +70,14 @@
         },
         "logicAppName": {
             "value": "devious-logic-app-dev"
+        },
+        "appInsightsConnectionString": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/your-subscription-id/resourceGroups/your-resource-group/providers/Microsoft.KeyVault/vaults/devious-kv10-dev"
+                },
+                "secretName": "appinsights-connection-string"
+            }
         }
     }
 }
