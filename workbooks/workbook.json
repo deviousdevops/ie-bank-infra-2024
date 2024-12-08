@@ -1,0 +1,244 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "1f74ed9a-e3ed-498d-bd5b-f68f3836a117",
+            "version": "KqlParameterItem/1.0",
+            "name": "Workspace",
+            "type": 5,
+            "isRequired": true,
+            "value": "${workspaceId}",
+            "typeSettings": {
+              "resourceTypeFilter": {
+                "microsoft.operationalinsights/workspaces": true
+              },
+              "additionalResourceOptions": [],
+              "defaultValue": "${workspaceId}"
+            }
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 0"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "# DEVIOUS BANK's WORKBOOK\n---\n\nWelcome to devious bank's workbook. This area will display some vital information on our bank, alongside its SLO's with SLI's\n\n## The table below shows the most common telemetric data being provided to us"
+      },
+      "name": "text - 2"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "union withsource=[\"$TableName\"] *\n| summarize Count=count() by TableName=[\"$TableName\"]\n| render barchart",
+        "size": 1,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-DEV/providers/Microsoft.OperationalInsights/workspaces/devious-law-dev"
+        ],
+        "visualization": "barchart"
+      },
+      "name": "query - 2"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## SLO 1: User Authentication Response Time: 99% of user login requests will be processed in under 2 seconds"
+      },
+      "name": "text - 3"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "The chart visualizes the Total Login Requests and the subset of Requests Processed in Under 2 Seconds over time, broken into hourly intervals. Tracking login response times ensures that our users experience fast and seamless authentication, which is vital for retaining customers and maintaining satisfaction.",
+        "style": "info"
+      },
+      "name": "text - 19"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\n| where CsUriStem == \"/login\"  // As we focus only on login requests\n| extend ResponseTimeSeconds = TimeTaken / 1000  \n| summarize \n    TotalRequests = count(), \n    RequestsUnder2Sec = countif(ResponseTimeSeconds <= 2) \n    by bin(TimeGenerated, 1h)\n| extend ComplianceRate = (RequestsUnder2Sec * 100.0) / TotalRequests\n| project TimeGenerated, TotalRequests, RequestsUnder2Sec\n| order by TimeGenerated asc\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 2592000000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-DEV/providers/Microsoft.OperationalInsights/workspaces/devious-law-dev"
+        ],
+        "visualization": "areachart"
+      },
+      "name": "query - 7"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## SLO 2: Transaction Processing Time - 95% of money transfer transactions will be completed within 2 seconds"
+      },
+      "name": "text - 4"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "The chart below shows transaction processing times, tracking the total number of transactions and those exceeding our 2-second threshold. This helps us ensure fast and reliable money transfers for our customers.",
+        "style": "info"
+      },
+      "name": "text - transaction-info"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\n| where CsUriStem == \"/api/deployments/\"  // Filter for the transaction endpoint\n| where ScStatus >= 200 and ScStatus < 300  // Filter for successful transactions\n| extend DurationInSeconds = TimeTaken / 1000  // Convert duration to seconds\n| summarize\n    TotalRequests = count(),\n    Over2SecRequests = countif(DurationInSeconds > 2)  // Count requests taking over 2 seconds\nby bin(TimeGenerated, 1h)\n| project TimeGenerated, TotalRequests, Over2SecRequests\n| order by TimeGenerated asc",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-DEV/providers/Microsoft.OperationalInsights/workspaces/devious-law-dev"
+        ],
+        "visualization": "areachart"
+      },
+      "name": "query - 8",
+      "styleSettings": {
+        "showBorder": true
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## SLO 3: CPU USAGE: Ensure CPU usage stays below 80% for 99% of the time over a given period."
+      },
+      "name": "text - 17"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "Reasoning towards tracking this vital indicator is because high CPU usage can lead to degraded application performance, increased response times, and potential timeouts. Sustained CPU spikes can also create bottlenecks, causing cascading failures across dependent services, therefore its important to make sure this is not happening",
+        "style": "info"
+      },
+      "name": "text - 18"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureMetrics\n| where MetricName == \"cpu_percent\"\n| where TimeGenerated > ago(24h)\n| summarize Latest_CPU_Percentage = max(Maximum), Average_CPU_Percentage = avg(Maximum) by bin(TimeGenerated, 1h)\n| order by TimeGenerated asc\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 604800000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-DEV/providers/Microsoft.OperationalInsights/workspaces/devious-law-dev"
+        ],
+        "visualization": "linechart",
+        "chartSettings": {
+          "ySettings": {
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+      "name": "query - 18",
+      "styleSettings": {
+        "margin": "1",
+        "showBorder": true
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## SLO 4: HTTP Requests: 95% of HTTP requests for the IE Bank static website will be processed in under 5 seconds."
+      },
+      "name": "text - 10"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "This chart provides an hourly breakdown of HTTP requests for the application. It shows the total number of requests, the number of requests that were processed in under 5 seconds (compliant with the SLO), and the number of requests that took longer than 5 seconds to process.",
+        "style": "info"
+      },
+      "name": "text - 11"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\n| extend IsSLOCompliant = case(ScStatus >= 200 and ScStatus < 300 and TimeTaken <= 5000, 1, 0)\n| extend IsOver5Sec = case(TimeTaken > 5000, 1, 0)\n| summarize TotalRequests = count(), CompliantRequests = sum(IsSLOCompliant), Over_5_Sec_Requests = sum(IsOver5Sec) by bin(TimeGenerated, 1h)\n| project TimeGenerated, TotalRequests, CompliantRequests, Over_5_Sec_Requests\n| order by TimeGenerated asc",
+        "size": 1,
+        "timeContext": {
+          "durationMs": 259200000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-DEV/providers/Microsoft.OperationalInsights/workspaces/devious-law-dev"
+        ],
+        "visualization": "areachart",
+        "chartSettings": {
+          "ySettings": {
+            "label": "Total Requests"
+          }
+        }
+      },
+      "name": "query - 5"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## SLO 5: HTTP Error Rate – 99% of HTTP requests for the IE Bank website will be processed without errors (status code 4xx or 5xx)."
+      },
+      "name": "text - 14"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "This SLO focuses on the reliability and quality of the HTTP responses for our devious bank. Specifically, it's measuring the percentage of requests that result in error responses, such as client-side errors (4xx) or server-side errors (5xx). Reasoning for this was to maintain a high level of availability and a smooth user experience for customers interacting with the website.",
+        "style": "info"
+      },
+      "name": "text - 15"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppServiceHTTPLogs\n| extend IsErrorRequest = case(ScStatus >= 400 and ScStatus < 600, 1, 0)  // 4xx and 5xx are error codes\n| summarize TotalRequests = count(), ErrorRequests = sum(IsErrorRequest) by bin(TimeGenerated, 1h)\n| project TimeGenerated, TotalRequests, ErrorRequests\n| order by TimeGenerated asc\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-DEV/providers/Microsoft.OperationalInsights/workspaces/devious-law-dev"
+        ],
+        "visualization": "barchart"
+      },
+      "name": "query - 13"
+    }
+  ],
+  "fallbackResourceIds": [
+    "/subscriptions/e0b9cada-61bc-4b5a-bd7a-52c606726b3b/resourceGroups/BCSAI2024-DEVOPS-STUDENTS-A-DEV/providers/Microsoft.OperationalInsights/workspaces/devious-law-dev"
+  ],
+  "$schema": "https://raw.githubusercontent.com/Microsoft/Application-Insights-Workbooks/master/schema/workbook.json"
+}

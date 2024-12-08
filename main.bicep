@@ -54,6 +54,7 @@ param staticWebAppName string
 param postgreSQLAdminServicePrincipalObjectId string
 param postgreSQLAdminServicePrincipalName string
 param githubActionsPrincipalId string
+param workspaceId string
 
 
 
@@ -169,14 +170,18 @@ module staticWebApp 'modules/static-web-frontend.bicep' = {
 
 
 resource sloWorkbook 'Microsoft.Insights/workbooks@2022-04-01' = {
-  name: guid('Devious-SLO-Monitoring')
+  name: guid('devious-workbook')
   location: location
   kind: 'shared'
   properties: {
-    displayName: 'IE Bank SLO Dashboard'
-    serializedData: '{"version":"Notebook/1.0","items":[],"isLocked":false}'  // Basic empty workbook
+    displayName: 'Devious Bank Workbook'
+    serializedData: loadTextContent('workbooks/workbook.json')
     version: '1.0'
-    sourceId: appInsights.outputs.appInsightsId  // Changed from appInsights.id to appInsights.outputs.appInsightsId
+    sourceId: appInsights.outputs.appInsightsId
     category: 'workbook'
   }
+  dependsOn: [
+    appInsights
+    logAnalytics
+  ]
 }
