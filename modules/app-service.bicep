@@ -20,6 +20,8 @@ param environmentType string
 param dockerRegistryName string 
 @secure()
 param appServiceAPISecretKey string
+@secure()
+param appInsightsConnectionString string
 
 var appServicePlanSkuName = (environmentType == 'prod') ? 'B1' : 'B1'
 
@@ -113,6 +115,14 @@ resource appServiceAPIApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'SECRET_KEY'
           value: appServiceAPISecretKey
+        }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: appInsightsConnectionString
+        }
+        {
+          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
+          value: '~3'
         }
       ]
     }
